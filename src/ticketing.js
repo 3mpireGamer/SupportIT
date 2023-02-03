@@ -1,6 +1,19 @@
 import React from 'react';
 import { TicketingModal } from './modals/ticketingmodal';
 
+/*
+{
+   author: 'Luca', 
+   title: 'Test', 
+   status: 'Open', 
+   category: 'Development',
+   desc: 'Dev Test', 
+   caseno: 1, 
+   created: '1 January 2023',
+   updated: '2 January 2023',
+}
+*/
+
 export class Ticketing extends React.Component {
    state = {
       tickets: []};
@@ -13,7 +26,8 @@ export class Ticketing extends React.Component {
    render() {
       return (
       <div>
-         <TicketingModal addTicket={this.addTicket} /><br />
+         <TicketingModal addTicket={this.addTicket} />
+         <br /><br />
          <TicketList tickets={this.state.tickets} />
       </div>
    );}
