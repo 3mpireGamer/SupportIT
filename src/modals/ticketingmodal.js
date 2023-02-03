@@ -1,4 +1,8 @@
 import React from 'react';
+import Button from '@mui/material/Button'
+import { ButtonGroup, Container } from '@mui/material';
+import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
+import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 const ticketTemplate = {
    author: 'Luca', 
@@ -25,14 +29,14 @@ export class TicketingModal extends React.Component {
          ticket
       });
    }
-   createTicket = (e) => {
+   createTicket = () => {
       this.props.addTicket(this.state.ticket);
       this.hideModal();
    }
-   showModal = (e) => {
+   showModal = () => {
       this.setState({show: true,});
    }
-   hideModal = (e) => {
+   hideModal = () => {
       this.setState({
          show: false, 
          isFilled: false,
@@ -48,14 +52,20 @@ export class TicketingModal extends React.Component {
    render() {
       if (!this.state.show) {
          return (
-         <button onClick={(e) => {this.showModal()}}>Create Ticket</button>);
+         <Button variant='outlined' onClick={() => {this.showModal()}}>Create Ticket</Button>);
       };
       return (
-         <div>
+         <Container>
             <TicketForm onChange={this.onChange}/>
-            <button onClick={(e) => {this.hideModal()}}>Cancel</button>
-            {this.state.isFilled ? (<button onClick={(e) => {this.createTicket();}}>Submit</button>) : (<button disabled>Submit</button>)}
-         </div>
+            <ButtonGroup variant='contained'>
+               <Button color='error' startIcon={<CancelPresentationTwoToneIcon />}
+               onClick={() => {this.hideModal()}}>Cancel</Button>
+               {this.state.isFilled
+               ? (<Button color='primary' endIcon={<DoneAllIcon />}
+                 onClick={() => {this.createTicket();}}>Submit</Button>)
+               : (<Button color='primary' disabled>Submit</Button>)}
+            </ButtonGroup>
+         </Container>
       );
    }
 }
