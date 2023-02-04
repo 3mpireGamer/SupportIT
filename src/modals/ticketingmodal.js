@@ -12,32 +12,32 @@ const ticketTemplate = {
    caseno: 0, 
    created: '1 January 2023',
    updated: '2 January 2023',
-}
+} 
+let ticket = {...ticketTemplate}
 
 export function TicketingModal({ addTicket }) {
    const [isFilled, setFilled] = useState(false);
    const [show, setShow] = useState(false);
    const anchorEl = document.getElementById('showModal')
-   let ticket = {...ticketTemplate}
+   
    const onChange = (e) => {
       ticket[e.target.id] = e.target.value;
-      console.log(ticket)
+      if (ticket.title!=='' && ticket.category!=='' && ticket.desc!=='' && !isFilled) {
+         setFilled(true);
+      } else if ((ticket.title==='' || ticket.category==='' || ticket.desc==='') && isFilled) {
+         setFilled(false);
+      }
    }
    const createTicket = () => {
       addTicket(ticket);
-      this.hideModal();
+      hideModal();
    }
    const showModal = () => {
       setShow(true);
    }
    const hideModal = () => {
+      ticket = {...ticketTemplate}
       setShow(false);
-   }
-   //useEffect to only listen to this.state.ticket?
-   if (ticket.title!=='' && ticket.category!=='' && ticket.desc!=='' && !isFilled) {
-      setFilled(true);
-   } else if ((ticket.title==='' || ticket.category==='' || ticket.desc==='') && isFilled) {
-      setFilled(false);
    }
    return (
    <Grid container direction='column' alignContent='center' spacing={2}>
@@ -54,7 +54,7 @@ export function TicketingModal({ addTicket }) {
          transformOrigin={{
             vertical: 'top',
             horizontal: 'center',
-         }}>
+      }}>
          <ClickAwayListener onClickAway={hideModal}>
             <Grid container spacing={2} alignContent='center'>
                <Grid item xs={12}><TicketForm onChange={onChange}/></Grid>

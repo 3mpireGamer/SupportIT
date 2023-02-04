@@ -1,19 +1,23 @@
+import React, { useState } from 'react';
 import { Grid, Typography } from '@mui/material';
-import React from 'react';
+import { ChatModal } from '../modals/chatmodal';
 
-export function Ticketing({ tickets}) {
+export function Ticketing({ tickets }) {
+   const [openedTicket, openTicket] = useState(0);
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return ( 
    <Grid item xs={12}>
       <Grid container direction='column' alignItems='center' spacing={2} maxWidth='960px'>
-         <TicketList tickets={tickets} />
+         <TicketList tickets={tickets} openTicket={openTicket}/>
+         <ChatModal openedTicket={openedTicket} openTicket={openTicket}/>
    </Grid></Grid>
 );}
 
-const TicketList = ({ tickets }) => {
+const TicketList = ({ tickets, openTicket }) => {
    const ticketsList = tickets.map(ticket => {
       return (
-      <Grid container key={ticket.caseno} direction='row' width='100%'>
+      <Grid container key={ticket.caseno} direction='row' width='100%'
+      onClick={() => {openTicket(ticket.caseno)}}>
          <Grid item sx={{textAlign: 'left'}} xs={3}>
          <Typography>Case Number: {ticket.caseno}</Typography></Grid>
          <Grid item sx={{textAlign: 'left'}} xs={3}>
