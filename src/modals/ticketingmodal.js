@@ -1,5 +1,5 @@
-import React from 'react';
-import { Button, Box, ButtonGroup, Grid, InputLabel, NativeSelect, TextField, Typography } from '@mui/material';
+import React, {useState} from 'react';
+import { Button, Box, ButtonGroup, Grid, InputLabel, NativeSelect, TextField, Typography, Popover, ClickAwayListener } from '@mui/material';
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 
@@ -14,55 +14,57 @@ const ticketTemplate = {
    updated: '2 January 2023',
 }
 
-export class TicketingModal extends React.Component {
-   state = {
-      show: false, 
-      isFilled: false,
-      ticket: {...ticketTemplate}
-   }
-
-   onChange = (e) => {
-      let ticket = {...this.state.ticket};
+export function TicketingModal({ addTicket }) {
+   const [isFilled, setFilled] = useState(false);
+   const [show, setShow] = useState(false);
+   const anchorEl = document.getElementById('showModal')
+   let ticket = {...ticketTemplate}
+   const onChange = (e) => {
       ticket[e.target.id] = e.target.value;
-      this.setState({
-         ticket
-      });
+      console.log(ticket)
    }
-   createTicket = () => {
-      this.props.addTicket(this.state.ticket);
+   const createTicket = () => {
+      addTicket(ticket);
       this.hideModal();
    }
-   showModal = () => {
-      this.setState({show: true,});
+   const showModal = () => {
+      setShow(true);
    }
-   hideModal = () => {
-      this.setState({
-         show: false, 
-         isFilled: false,
-         ticket: {...ticketTemplate}});
+   const hideModal = () => {
+      setShow(false);
    }
-   componentDidUpdate() { //useEffect to only listen to this.state.ticket?
-      if (this.state.ticket.title!=='' && this.state.ticket.category!=='' && this.state.ticket.desc!=='' && !this.state.isFilled) {
-         this.setState({isFilled: true,});
-      } else if ((this.state.ticket.title==='' || this.state.ticket.category==='' || this.state.ticket.desc==='') && this.state.isFilled) {
-         this.setState({isFilled: false,});
-      };
+   //useEffect to only listen to this.state.ticket?
+   if (ticket.title!=='' && ticket.category!=='' && ticket.desc!=='' && !isFilled) {
+      setFilled(true);
+   } else if ((ticket.title==='' || ticket.category==='' || ticket.desc==='') && isFilled) {
+      setFilled(false);
    }
-   render() {
-      if (!this.state.show) {
-         return (
-         <Button variant='contained' color='primary' onClick={() => {this.showModal()}}>Create Ticket</Button>
-      );};
-      return (
-      <Grid container spacing={2} maxWidth='480px'>
-         <Grid item xs={12}><TicketForm onChange={this.onChange}/></Grid>
-         <Grid item xs={12}>
-            <FormButtons hideModal={this.hideModal} createTicket={this.createTicket} isFilled={this.state.isFilled}/>
-         </Grid>
+   return (
+   <Grid container direction='column' alignContent='center' spacing={2}>
+      <Grid item xs={12}>
+         <Button id='showModal' variant='contained' color='primary'
+         onClick={() => {showModal()}}>Create Ticket</Button>
       </Grid>
-      );
-   }
-}
+      <Grid item xs={12}   >
+      <Popover open={show} anchorEl={anchorEl}
+         anchorOrigin={{
+            vertical: 'bottom',
+            horizontal: 'center',
+         }}
+         transformOrigin={{
+            vertical: 'top',
+            horizontal: 'center',
+         }}>
+         <ClickAwayListener onClickAway={hideModal}>
+            <Grid container spacing={2} alignContent='center'>
+               <Grid item xs={12}><TicketForm onChange={onChange}/></Grid>
+               <Grid item xs={12}><FormButtons hideModal={hideModal} createTicket={createTicket} isFilled={isFilled}/></Grid>
+            </Grid>
+         </ClickAwayListener>
+      </Popover>
+      </Grid>
+   </Grid>
+);}
 
 const TicketForm = ({ onChange }) => {  
    return (
