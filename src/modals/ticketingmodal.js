@@ -1,5 +1,5 @@
-import React, {useState} from 'react';
-import { Button, Box, ButtonGroup, Grid, InputLabel, NativeSelect, TextField, Typography, Popover, ClickAwayListener } from '@mui/material';
+import React, { useState } from 'react';
+import { Button, Box, ButtonGroup, Grid, InputLabel, NativeSelect, TextField, Popper, ClickAwayListener } from '@mui/material';
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 
@@ -12,13 +12,14 @@ const ticketTemplate = {
    caseno: 0, 
    created: '1 January 2023',
    updated: '2 January 2023',
+   messages: [{}]
 } 
 let ticket = {...ticketTemplate}
 
 export function TicketingModal({ addTicket }) {
    const [isFilled, setFilled] = useState(false);
    const [show, setShow] = useState(false);
-   const anchorEl = document.getElementById('showModal')
+   const anchorEl = document.getElementById('modalAnchor')
    
    const onChange = (e) => {
       ticket[e.target.id] = e.target.value;
@@ -42,34 +43,23 @@ export function TicketingModal({ addTicket }) {
    return (
    <Grid container direction='column' alignContent='center' spacing={2}>
       <Grid item xs={12}>
-         <Button id='showModal' variant='contained' color='primary'
+         <Button variant='contained' color='primary'
          onClick={() => {showModal()}}>Create Ticket</Button>
-      </Grid>
-      <Grid item xs={12}   >
-      <Popover open={show} anchorEl={anchorEl}
-         anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'center',
-         }}
-         transformOrigin={{
-            vertical: 'top',
-            horizontal: 'center',
-      }}>
+      </Grid><Grid item id='modalAnchor'></Grid>
+      <Popper open={show} anchorEl={anchorEl} sx={{backgroundColor: 'secondary.light', borderRadius: '4px'}}>
          <ClickAwayListener onClickAway={hideModal}>
-            <Grid container spacing={2} alignContent='center'>
+            <Grid container spacing={1} alignContent='center'>
                <Grid item xs={12}><TicketForm onChange={onChange}/></Grid>
                <Grid item xs={12}><FormButtons hideModal={hideModal} createTicket={createTicket} isFilled={isFilled}/></Grid>
             </Grid>
          </ClickAwayListener>
-      </Popover>
-      </Grid>
+      </Popper>
    </Grid>
 );}
 
 const TicketForm = ({ onChange }) => {  
    return (
-   <Grid container spacing={1}>
-      <Grid item xs={12}><Typography textAlign='center' variant='h4'>Create a New Ticket</Typography></Grid>
+   <Grid container spacing={1.5}>
       <Grid item xs={12}><TextField fullWidth id='title' variant='outlined' label='Case Title' onChange={onChange}></TextField></Grid>
       <Grid item xs={12}>
          <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px', boxSizing: 'border-box'}}>

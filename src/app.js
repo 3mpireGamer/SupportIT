@@ -1,12 +1,13 @@
-import React from "react";
-import { Grid } from "@mui/material";
+import React, { useState } from "react";
+import { AppBar, Box } from "@mui/material";
 import { Ticketing } from "./components/ticketing";
 import { Head } from "./components/head";
+import { Auth } from "./components/auth"
 
 
-export class App extends React.Component {
-   state = {
-      tickets: [{
+export function App () {
+   const [tickets, setTickets] = useState(
+      Array(1).fill({
          author: 'Luca', 
          title: 'Test', 
          status: 'Open', 
@@ -17,27 +18,26 @@ export class App extends React.Component {
          updated: '2 January 2023',
          messages: [{
             id: 0,
-            author: 'Luca', 
+            author: 'Agent', 
             dateTime: '2 January 2023, 10:03 AM',
-            content: 'This is a test of the messaging component'
+            content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
          }, {
             id: 1,
             author: 'Luca', 
             dateTime: '2 January 2023, 10:07 AM',
-            content: 'This is a test of the messaging component too'
-         }]
-   }]};
-   addTicket = (ticket) => {
-      ticket.caseno = this.state.tickets.length + 1
-      this.setState({
-         tickets: this.state.tickets.concat([ticket]),
-      });
+            content: "Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s, when an unknown printer took a galley of type and scrambled it to make a type specimen book. It has survived not only five centuries, but also the leap into electronic typesetting, remaining essentially unchanged. It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum."
+         }
+   ]}));
+
+   const addTicket = (ticket) => {
+      ticket.caseno = tickets.length + 1
+      setTickets(tickets.concat([ticket]));
    }
-   render() {
-      return (
-      <Grid container direction='column' spacing={4} alignContent='center'>
-         <Grid item xs={12}><Head addTicket={this.addTicket}/></Grid>
-         <Grid item xs={12}><Ticketing tickets={this.state.tickets}/></Grid>
-      </Grid>
-   )}
-}
+
+   return (
+   <Box sx={{backgroundColor: 'primary.light', alignContent: 'center'}}>
+      <AppBar id='head' color='secondary' position='static'><Head addTicket={addTicket} /></AppBar>
+      <Ticketing tickets={tickets}/>
+      <Auth />
+   </Box>
+)}

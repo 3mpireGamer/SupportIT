@@ -6,26 +6,26 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { lightBlue, deepPurple, deepOrange } from '@mui/material/colors';
+import { lightBlue, blueGrey, deepOrange } from '@mui/material/colors';
 
 const theme = createTheme({
   palette: {
     primary: {
-      light: lightBlue[400], 
-      main: lightBlue['A400'], 
-      dark: lightBlue[800],
+      light: lightBlue[50], 
+      main: lightBlue[400], 
+      dark: lightBlue[600],
     },
     secondary: {
-      light: deepPurple[400], 
-      main: deepPurple['A400'], 
-      dark: deepPurple[800],
+      light: blueGrey['A100'], 
+      main: blueGrey['A200'], 
+      dark: blueGrey['A400'],
     }, 
     error: {
       light: deepOrange[500], 
       main: deepOrange[600], 
       dark: deepOrange['A700'],
     }
-  }
+  },
 });
 
 const root = ReactDOM.createRoot(document.getElementById('root'));

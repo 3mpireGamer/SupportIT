@@ -1,29 +1,96 @@
+import React, { useEffect, useState } from 'react'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import { Box, ClickAwayListener, Grid, Popover, Typography } from '@mui/material';
+import { ClickAwayListener, Grid, Popper, TextField, Typography } from '@mui/material';
 
-export function ChatModal({ openedTicket, openTicket }) {
+const chatHeight = 400
+
+function doesChatFit() {
+   let docHeight = document.getElementById('root').offsetHeight;
+   let headHeight = document.getElementById('head').offsetHeight;
+   return docHeight > (chatHeight + 156 + headHeight)
+}
+function generateBoundingRect() {
+   let chatFits = doesChatFit()
+   let headHeight = document.getElementById('head').offsetHeight;
+   let docHeight = document.getElementById('root').offsetHeight;
+   let docWidth = document.getElementById('root').offsetWidth;
+   let scrollY = window.scrollY;
+   let boundingClientRect = () => ({
+      width: '0', height: '0', left: docWidth,
+      top: chatFits 
+      ? docHeight : scrollY <= (16 + headHeight) 
+      ? 16 + headHeight - scrollY : scrollY <= (chatHeight + 156 + headHeight - docHeight) 
+      ? 16 + headHeight - scrollY : docHeight
+   })
+   let placementBool = chatFits 
+   ? true : scrollY <= (16 + headHeight) 
+   ? false : scrollY <= (chatHeight + 156 + headHeight - docHeight) 
+   ? false : true
+   return ({boundingClientRect, placementBool})
+}
+
+function getMessages(ticket) {
+   return (ticket.messages.map(message => {
+      return ticket.author === message.author 
+      ? (<Grid item><Grid container>
+      <Grid item xs={2}></Grid><Grid item xs={10} id={message.id}>{message.content}</Grid>
+      </Grid></Grid>)
+      : (<Grid item><Grid container>
+      <Grid item xs={10} id={message.id}>{message.content}</Grid><Grid item xs={2}></Grid>
+      </Grid></Grid>)
+   }));
+}
+
+
+export function ChatModal({ tickets, openedTicket, openTicket }) {
+   const [virtualEl, setVirtualEl] = useState();
+   const [placement, setPlacement] = useState();
+   const selectedTicket = tickets.filter(ticket => {
+      return ticket.caseno === openedTicket
+   });
+   const messages = selectedTicket.length !== 0 ? getMessages(selectedTicket[0]) : '';
+   useEffect(() => {
+      let {boundingClientRect, placementBool} = generateBoundingRect();
+      setVirtualEl({
+         getBoundingClientRect: boundingClientRect,
+      });
+      setPlacement(placementBool ? 'top-end': 'bottom-end');
+      window.addEventListener('scroll', () => {
+         let {boundingClientRect, placementBool} = generateBoundingRect();
+         setVirtualEl({
+            getBoundingClientRect: boundingClientRect,
+         });
+         setPlacement(placementBool ? 'top-end': 'bottom-end');
+      });
+      let eventTimer = null;
+      window.addEventListener('resize', () => {
+         if (eventTimer !== null) {
+            clearTimeout(eventTimer);
+         }
+         eventTimer = setTimeout(() => {
+            let {boundingClientRect, placementBool} = generateBoundingRect();
+            setVirtualEl({
+               getBoundingClientRect: boundingClientRect,
+            });
+            setPlacement(placementBool ? 'top-end': 'bottom-end');
+         }, 150);
+      });
+   }, []);
    return (
-   <Box>
-      <Popover open={Boolean(openedTicket)}
-         anchorReference="anchorPosition"
-         anchorPosition={{ 
-            top: document.getElementById('root').offsetHeight, 
-            left: document.getElementById('root').offsetWidth 
-         }}
-         anchorOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-         }}
-         transformOrigin={{
-            vertical: 'bottom',
-            horizontal: 'right',
-      }}>
-         <ClickAwayListener onClickAway={() => {openTicket(0)}}>
-            <Grid container>
-               <ChatBubbleOutlineIcon />
-               <Typography>Case Number: {openedTicket}</Typography>
+   <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '4px', backgroundColor: 'white'}}>
+      <ClickAwayListener onClickAway={() => {openTicket(0)}}> 
+      <Grid container width='440px' spacing={3} padding={2}>
+         <Grid item xs={1}><ChatBubbleOutlineIcon /></Grid>
+         <Grid item xs={11}><Typography
+         textAlign='right' paddingRight={1}>Case Number: {openedTicket}</Typography></Grid>
+         <Grid item xs={12} height={chatHeight + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
+            <Grid container direction='column' spacing={2}>
+               {messages}
             </Grid>
-         </ClickAwayListener>
-      </Popover>
-   </Box>
+         </Grid>
+         <Grid item xs={12}><TextField fullWidth sx={{backgroundColor: 'secondary.main', borderRadius: '4px'}} 
+         id='content' variant='outlined' label='Send Message' multiline></TextField></Grid>
+      </Grid>
+      </ClickAwayListener>
+   </Popper>
 );}
