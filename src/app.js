@@ -6,6 +6,7 @@ import { Auth } from "./components/auth"
 import { firebaseInit } from "./components/firebase/firebase";
 
 export function App () {
+   const [authenticated, authenticate] = useState('');
    const [tickets, setTickets] = useState(
       firebaseInit()   
    );
@@ -18,9 +19,8 @@ export function App () {
 
    return (
    <Box sx={{backgroundColor: 'primary.light', alignContent: 'center'}}>
-      <AppBar id='head' color='secondary' position='static'><Head addTicket={addTicket} /></AppBar>
-      <Ticketing tickets={tickets}/>
-      <Auth />
+      <AppBar id='head' color='secondary' position='static'><Head addTicket={addTicket} authenticated={authenticated} authenticate={authenticate}/></AppBar>
+      {authenticated ? <Ticketing tickets={tickets}/> : <Auth authenticate={authenticate}/>}
    </Box>
 )}
 
