@@ -6,7 +6,7 @@ import { Auth } from "./components/auth"
 import { firebaseInit } from "./components/firebase/firebase";
 
 export function App () {
-   const [authenticated, authenticate] = useState('');
+   const [authenticated, authenticate] = useState('admin');
    const [tickets, setTickets] = useState(
       firebaseInit()   
    );

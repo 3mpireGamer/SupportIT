@@ -6,7 +6,7 @@ export function Ticketing({ tickets }) {
    const [openedTicket, openTicket] = useState(0);
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return ( 
-   <Grid container direction='column' alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
+   <Grid container id='ticketing' direction='column' alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
       <TicketList tickets={tickets} openTicket={openTicket}/>
       <ChatModal tickets={tickets} openedTicket={openedTicket} openTicket={openTicket} />
    </Grid>

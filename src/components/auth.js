@@ -46,13 +46,13 @@ export function Auth({ authenticate }) {
    }
 
    return(
-   <Grid container direction='column' spacing={2} alignContent='center' mt={2}>
-      <Grid item xs={12}><TextField id='username' variant='outlined' label='Username' onChange={onChange}
+   <Grid container id='auth' direction='column' spacing={2} alignContent='center' mt={2}>
+      {authError ? <Grid item xs={12}><Typography color='error' variant='body1' component='div' textAlign='center'>Invalid username or password!</Typography></Grid> : null}
+      <Grid item xs={12}><TextField fullWidth id='username' variant='outlined' label='Username' onChange={onChange}
       onKeyDown={(e) => {if (e.key === 'Enter') {enterPressed(e.target.id)}}}></TextField></Grid>
-      <Grid item xs={12}><TextField id='password' variant='outlined' label='Password' type='password' onChange={onChange}
+      <Grid item xs={12}><TextField fullWidth id='password' variant='outlined' label='Password' type='password' onChange={onChange}
       onKeyDown={(e) => {if (e.key === 'Enter') {enterPressed(e.target.id)}}}></TextField></Grid>
-      <Grid item xs={12}><Button onClick={checkAuth} variant='contained'>Login</Button></Grid>
-      {authError ? <Grid item xs={12}><Typography color='error' variant='h6'>Invalid username or password!</Typography></Grid> : null}
+      <Grid item xs={12}><Button fullWidth onClick={checkAuth} variant='contained'>Login</Button></Grid>
    </Grid>
    )
 }
