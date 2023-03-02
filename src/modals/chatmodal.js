@@ -32,11 +32,11 @@ function generateBoundingRect() {
 function getMessages(ticket) {
    return (ticket.messages.map(message => {
       return ticket.author === message.author 
-      ? (<Grid item><Grid container>
-      <Grid item xs={2}></Grid><Grid item xs={10} id={message.id}>{message.content}</Grid>
+      ? (<Grid item key={message.id}><Grid container>
+      <Grid item xs={2}></Grid><Grid item xs={10}>{message.content}</Grid>
       </Grid></Grid>)
-      : (<Grid item><Grid container>
-      <Grid item xs={10} id={message.id}>{message.content}</Grid><Grid item xs={2}></Grid>
+      : (<Grid item key={message.id}><Grid container>
+      <Grid item xs={10}>{message.content}</Grid><Grid item xs={2}></Grid>
       </Grid></Grid>)
    }));
 }
@@ -46,7 +46,7 @@ export function ChatModal({ tickets, openedTicket, openTicket }) {
    const [virtualEl, setVirtualEl] = useState();
    const [placement, setPlacement] = useState();
    const selectedTicket = tickets.filter(ticket => {
-      return ticket.caseno === openedTicket
+      return ticket.id === openedTicket
    });
    const messages = selectedTicket.length !== 0 ? getMessages(selectedTicket[0]) : '';
    useEffect(() => {
@@ -81,12 +81,11 @@ export function ChatModal({ tickets, openedTicket, openTicket }) {
       <ClickAwayListener onClickAway={() => {openTicket(0)}}> 
       <Grid container width='440px' spacing={3} padding={2}>
          <Grid item xs={1}><ChatBubbleOutlineIcon /></Grid>
-         <Grid item xs={11}><Typography
-         textAlign='right' paddingRight={1}>Case Number: {openedTicket}</Typography></Grid>
+         <Grid item xs={11}><Typography textAlign='right' paddingRight={1}>
+            Case Number: {selectedTicket.length !== 0 ? selectedTicket[0].caseno : ''}
+         </Typography></Grid>
          <Grid item xs={12} height={chatHeight + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
-            <Grid container direction='column' spacing={2}>
-               {messages}
-            </Grid>
+            <Grid container direction='column' spacing={2}>{messages}</Grid>
          </Grid>
          <Grid item xs={12}><TextField fullWidth sx={{backgroundColor: 'secondary.main', borderRadius: '4px'}} 
          id='content' variant='outlined' label='Send Message' multiline></TextField></Grid>

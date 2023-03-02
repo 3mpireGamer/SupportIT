@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { collection, getDocs, getFirestore } from 'firebase/firestore';
+import { addDoc, collection, getDocs, getFirestore } from 'firebase/firestore';
 
 export function firebaseInit() {
    const firebaseConfig = {
@@ -12,41 +12,32 @@ export function firebaseInit() {
    }
    
    initializeApp(firebaseConfig);
-   const db = getFirestore();
-   return getTickets(db)
+   return getFirestore()
 }
 
-function getTickets(db) {
+export function getTickets(db) {
    const ticketCollection = collection(db, 'tickets');
    let tickets = [];
-   getDocs(ticketCollection)
+   let ticketsPromise = new Promise((resolve, reject) => {
+      getDocs(ticketCollection)
       .then((snapshot) => {
          snapshot.docs.forEach(ticket => {
             tickets.push({
                ...ticket.data(), 
-               messages: getMessages(db, ticket),
                id: ticket.id,
             });    
          });
+         resolve(tickets);
       })
       .catch(err => {
          console.log(err.message);
+         resolve({});
       });
-   return tickets
-} function getMessages(db, ticket) {
-   const messageCollection = collection(db, 'tickets/' + ticket.id + '/messages');
-   let messages = [];
-   getDocs(messageCollection)
-      .then((snapshot) => {
-         snapshot.docs.forEach(message => {
-            messages.push({
-               ...message.data(), 
-               id: message.id,
-            });
-         });
-      })
-      .catch(err => {
-         console.log(err.message);
-      });
-   return messages
+   });
+   return ticketsPromise
+} 
+
+export function addTicket(db, ticket) {
+   const ticketCollection = collection(db, 'tickets');
+   addDoc(ticketCollection, ticket)
 }

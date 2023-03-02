@@ -15,8 +15,8 @@ export function Ticketing({ tickets }) {
 const TicketList = ({ tickets, openTicket }) => {
    const ticketsList = tickets.map(ticket => {
       return (
-      <Grid container key={ticket.caseno} direction='row' maxWidth='960px'
-      onClick={() => {openTicket(ticket.caseno)}}>
+      <Grid container key={ticket.id} direction='row' maxWidth='960px'
+      onClick={() => {openTicket(ticket.id)}}>
          <Grid item sx={{textAlign: 'left'}} xs={3}>
          <Typography>Case Number: {ticket.caseno}</Typography></Grid>
          <Grid item sx={{textAlign: 'left'}} xs={3}>

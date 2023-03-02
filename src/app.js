@@ -1,26 +1,35 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { AppBar, Box } from "@mui/material";
 import { Ticketing } from "./components/ticketing";
 import { Head } from "./components/head";
 import { Auth } from "./components/auth"
-import { firebaseInit } from "./components/firebase/firebase";
+import { addTicket, firebaseInit, getTickets } from "./components/firebase/firebase";
+
+const db = firebaseInit();
 
 export function App () {
    const [authenticated, authenticate] = useState('admin');
-   const [tickets, setTickets] = useState(
-      firebaseInit()   
-   );
-   console.log(tickets);
+   const [tickets, setTickets] = useState();
 
-   const addTicket = (ticket) => {
+   useEffect(() => {
+      getTickets(db).then(result => {setTickets(result)});
+   }, [])
+
+   const newTicket = (ticket) => {
       ticket.caseno = tickets.length + 1
-      setTickets(tickets.concat([ticket]));
+      ticket.messages = [{
+         id: 1,
+         content: 'Hello, I need help with ' + ticket.category + '. ' + ticket.desc,
+         dateTime: '2 Jan 2023 09:23AM'
+      }];
+      addTicket(db, ticket);
+      getTickets(db).then(result => {setTickets(result)});
    }
 
    return (
    <Box sx={{backgroundColor: 'primary.light', alignContent: 'center'}}>
-      <AppBar id='head' color='secondary' position='static'><Head addTicket={addTicket} authenticated={authenticated} authenticate={authenticate}/></AppBar>
-      {authenticated ? <Ticketing tickets={tickets}/> : <Auth authenticate={authenticate}/>}
+      <AppBar id='head' color='secondary' position='static'><Head newTicket={newTicket} authenticated={authenticated} authenticate={authenticate}/></AppBar>
+      {authenticated ? tickets ? <Ticketing tickets={tickets}/> : null : <Auth authenticate={authenticate}/>}
    </Box>
 )}
 

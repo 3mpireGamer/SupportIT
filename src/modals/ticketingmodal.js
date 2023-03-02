@@ -16,7 +16,7 @@ const ticketTemplate = {
 } 
 let ticket = {...ticketTemplate}
 
-export function TicketingModal({ addTicket }) {
+export function TicketingModal({ newTicket }) {
    const [isFilled, setFilled] = useState(false);
    const [show, setShow] = useState(false);
    const anchorEl = document.getElementById('modalAnchor')
@@ -30,7 +30,7 @@ export function TicketingModal({ addTicket }) {
       }
    }
    const createTicket = () => {
-      addTicket(ticket);
+      newTicket(ticket);
       hideModal();
    }
    const showModal = () => {
