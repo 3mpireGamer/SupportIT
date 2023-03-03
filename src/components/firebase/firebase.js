@@ -12,11 +12,11 @@ export function firebaseInit() {
    }
    
    initializeApp(firebaseConfig);
-   return getFirestore()
+   let db = getFirestore();
+   return collection(db, 'tickets')
 }
 
-export function getTickets(db) {
-   const ticketCollection = collection(db, 'tickets');
+export function getTickets(ticketCollection) {
    let tickets = [];
    let ticketsPromise = new Promise((resolve, reject) => {
       getDocs(ticketCollection)
@@ -37,7 +37,6 @@ export function getTickets(db) {
    return ticketsPromise
 } 
 
-export function addTicket(db, ticket) {
-   const ticketCollection = collection(db, 'tickets');
+export function addTicket(ticketCollection, ticket) {
    addDoc(ticketCollection, ticket)
 }

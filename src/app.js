@@ -4,15 +4,19 @@ import { Ticketing } from "./components/ticketing";
 import { Head } from "./components/head";
 import { Auth } from "./components/auth"
 import { addTicket, firebaseInit, getTickets } from "./components/firebase/firebase";
+import { onSnapshot } from 'firebase/firestore'
 
-const db = firebaseInit();
+const ticketCollection = firebaseInit();
 
 export function App () {
    const [authenticated, authenticate] = useState('admin');
    const [tickets, setTickets] = useState();
 
    useEffect(() => {
-      getTickets(db).then(result => {setTickets(result)});
+      // onSnapshot(ticketCollection, snapshot => {
+      //    getTickets(snapshot).then(result => {setTickets(result)})
+      // })
+      getTickets(ticketCollection).then(result => {setTickets(result)});
    }, [])
 
    const newTicket = (ticket) => {
@@ -22,8 +26,8 @@ export function App () {
          content: 'Hello, I need help with ' + ticket.category + '. ' + ticket.desc,
          dateTime: '2 Jan 2023 09:23AM'
       }];
-      addTicket(db, ticket);
-      getTickets(db).then(result => {setTickets(result)});
+      addTicket(ticketCollection, ticket);
+      getTickets(ticketCollection).then(result => {setTickets(result)});
    }
 
    return (
