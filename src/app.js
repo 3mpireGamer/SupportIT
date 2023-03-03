@@ -13,10 +13,9 @@ export function App () {
    const [tickets, setTickets] = useState();
 
    useEffect(() => {
-      // onSnapshot(ticketCollection, snapshot => {
-      //    getTickets(snapshot).then(result => {setTickets(result)})
-      // })
-      getTickets(ticketCollection).then(result => {setTickets(result)});
+      onSnapshot(ticketCollection, snapshot => {
+         getTickets(snapshot).then(result => {setTickets(result)})
+      })
    }, [])
 
    const newTicket = (ticket) => {
@@ -27,7 +26,6 @@ export function App () {
          dateTime: '2 Jan 2023 09:23AM'
       }];
       addTicket(ticketCollection, ticket);
-      getTickets(ticketCollection).then(result => {setTickets(result)});
    }
 
    return (

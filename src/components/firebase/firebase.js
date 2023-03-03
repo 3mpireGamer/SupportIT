@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, getDocs, getFirestore } from 'firebase/firestore';
+import { addDoc, collection, getFirestore } from 'firebase/firestore';
 
 export function firebaseInit() {
    const firebaseConfig = {
@@ -16,23 +16,16 @@ export function firebaseInit() {
    return collection(db, 'tickets')
 }
 
-export function getTickets(ticketCollection) {
+export function getTickets(snapshot) {
    let tickets = [];
-   let ticketsPromise = new Promise((resolve, reject) => {
-      getDocs(ticketCollection)
-      .then((snapshot) => {
-         snapshot.docs.forEach(ticket => {
-            tickets.push({
-               ...ticket.data(), 
-               id: ticket.id,
-            });    
-         });
-         resolve(tickets);
-      })
-      .catch(err => {
-         console.log(err.message);
-         resolve({});
-      });
+   let ticketsPromise = new Promise((resolve) => {   
+   snapshot.docs.forEach(ticket => {
+      tickets.push({
+         ...ticket.data(), 
+         id: ticket.id,
+      });    
+   });
+   resolve(tickets);
    });
    return ticketsPromise
 } 
