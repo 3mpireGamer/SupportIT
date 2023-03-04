@@ -38,12 +38,12 @@ export function Auth({ authenticate }) {
       let authError = 'Invalid username or password!';
       users.forEach(user => {
          if (username === user.username && password === user.password) {
-            authenticate(username);
+            authenticate(username.charAt(0).toUpperCase() + username.slice(1).toLowerCase());
             authError = false;
          } 
       });
       if (username.match(/^[0-9a-zA-Z]+$/) && password === '1234') {
-         authenticate(username);
+         authenticate(username.charAt(0).toUpperCase() + username.slice(1).toLowerCase());
          authError = false;
       }
       throwError(authError);

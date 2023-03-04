@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, getFirestore, orderBy, query, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getFirestore, orderBy, query, updateDoc, where } from 'firebase/firestore';
 
 export function firestoreInit() {
    const firebaseConfig = {
@@ -15,6 +15,7 @@ export function firestoreInit() {
    let db = getFirestore();
    let ticketCollection = collection(db, 'tickets')
    return {
+      db,
       collection: ticketCollection, 
       query: query(ticketCollection, where('updated', 'not-in', ['']), orderBy('updated', 'desc'))
    }
@@ -45,4 +46,7 @@ export function getTickets(snapshot, filter) {
 
 export function addTicket(ticketCollection, ticket) {
    addDoc(ticketCollection, ticket)
+}
+export function updateTicket(db, ticket) {
+   updateDoc(doc(db, 'tickets', ticket.id), ticket);
 }

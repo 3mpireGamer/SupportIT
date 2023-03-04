@@ -3,13 +3,13 @@ import { AppBar, Box } from "@mui/material";
 import { Ticketing } from "./components/ticketing";
 import { Head } from "./components/head";
 import { Auth } from "./components/auth"
-import { addTicket, firestoreInit, getTickets } from "./components/firebase/firebase";
+import { addTicket, firestoreInit, getTickets, updateTicket } from "./components/firebase/firebase";
 import { onSnapshot } from 'firebase/firestore'
 
 const fs = firestoreInit();
 
 export function App () {
-   const [authenticated, authenticate] = useState('admin');
+   const [authenticated, authenticate] = useState('Admin');
    const [tickets, setTickets] = useState();
    const [viewAll, setView] = useState(1);
 
@@ -20,22 +20,35 @@ export function App () {
    }, [authenticated, viewAll]);
 
    const newTicket = (ticket) => {
-      ticket.author = authenticated.charAt(0).toUpperCase() + authenticated.slice(1);
+      ticket.author = authenticated;
       ticket.caseno = generateCaseNo(authenticated);
       ticket.created = new Date();
       ticket.updated = new Date();
       ticket.messages = [{
          id: generateId(),
+         author: ticket.author, 
          content: 'Hello, I need help with ' + ticket.category + '. ' + ticket.desc,
-         dateTime: '2 Jan 2023 09:23AM'
+         dateTime: new Date()
       }];
       addTicket(fs.collection, ticket);
+   } 
+   const newMessage = (ticket, message) => {
+      if (message) {
+         ticket.updated = new Date();
+         ticket.messages.push({
+            id: generateId(), 
+            author: authenticated,
+            content: message, 
+            dateTime: new Date()
+         })
+         updateTicket(fs.db, ticket);
+      }
    }
 
    return (
    <Box sx={{backgroundColor: 'primary.light', alignContent: 'center'}}>
       <AppBar id='head' color='secondary' position='static'><Head newTicket={newTicket} authenticated={authenticated} authenticate={authenticate}/></AppBar>
-      {authenticated ? tickets ? <Ticketing tickets={tickets} setView={setView} /> : null : <Auth authenticate={authenticate} />}
+      {authenticated ? tickets ? <Ticketing tickets={tickets} setView={setView} newMessage={newMessage} authenticated={authenticated} /> : null : <Auth authenticate={authenticate} />}
    </Box>
 )}
 

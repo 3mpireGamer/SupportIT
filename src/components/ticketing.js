@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Grid, Tab, Tabs, Typography } from '@mui/material';
 import { ChatModal } from '../modals/chatmodal';
 
-export function Ticketing({ tickets, setView }) {
+export function Ticketing({ tickets, setView, newMessage, authenticated }) {
    const [openedTicket, openTicket] = useState(0);
    const [tab, setTab] = useState(1);
    //Need Grid with Mutiple breakpoints for window resizing and small displays
@@ -13,7 +13,7 @@ export function Ticketing({ tickets, setView }) {
          <Tab value={0} label='View My Cases' />
       </Tabs></Grid>
       <TicketList tickets={tickets} openTicket={openTicket}/>
-      <ChatModal tickets={tickets} openedTicket={openedTicket} openTicket={openTicket} />
+      <ChatModal tickets={tickets} openedTicket={openedTicket} openTicket={openTicket} newMessage={newMessage} authenticated={authenticated} />
    </Grid>
 );}
 
