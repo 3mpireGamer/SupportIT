@@ -1,7 +1,7 @@
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, getFirestore } from 'firebase/firestore';
+import { addDoc, collection, getFirestore, orderBy, query, where } from 'firebase/firestore';
 
-export function firebaseInit() {
+export function firestoreInit() {
    const firebaseConfig = {
       apiKey: "AIzaSyC7Loi9_eiajp7-E5JP1LPCFRzbfHY4sag",
       authDomain: "support-ticketing-manager.firebaseapp.com",
@@ -13,8 +13,13 @@ export function firebaseInit() {
    
    initializeApp(firebaseConfig);
    let db = getFirestore();
-   return collection(db, 'tickets')
+   let ticketCollection = collection(db, 'tickets')
+   return {
+      collection: ticketCollection, 
+      query: query(ticketCollection, where('updated', 'not-in', ['']), orderBy('updated', 'desc'))
+   }
 }
+
 
 export function getTickets(snapshot, filter) {
    let tickets = [];

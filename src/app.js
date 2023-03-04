@@ -3,10 +3,10 @@ import { AppBar, Box } from "@mui/material";
 import { Ticketing } from "./components/ticketing";
 import { Head } from "./components/head";
 import { Auth } from "./components/auth"
-import { addTicket, firebaseInit, getTickets } from "./components/firebase/firebase";
+import { addTicket, firestoreInit, getTickets } from "./components/firebase/firebase";
 import { onSnapshot } from 'firebase/firestore'
 
-const ticketCollection = firebaseInit();
+const fs = firestoreInit();
 
 export function App () {
    const [authenticated, authenticate] = useState('admin');
@@ -14,7 +14,7 @@ export function App () {
    const [viewAll, setView] = useState(1);
 
    useEffect(() => {
-      onSnapshot(ticketCollection, snapshot => {
+      onSnapshot(fs.query, snapshot => {
          getTickets(snapshot, viewAll ? false : authenticated).then(result => {setTickets(result)});
       })
    }, [authenticated, viewAll]);
@@ -29,7 +29,7 @@ export function App () {
          content: 'Hello, I need help with ' + ticket.category + '. ' + ticket.desc,
          dateTime: '2 Jan 2023 09:23AM'
       }];
-      addTicket(ticketCollection, ticket);
+      addTicket(fs.collection, ticket);
    }
 
    return (
