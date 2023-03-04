@@ -29,6 +29,9 @@ export function getTickets(snapshot, filter) {
       let temp = {...ticket.data()}
       temp.created = temp.created.toDate();
       temp.updated = temp.updated.toDate();
+      temp.messages.forEach(message => {
+         message.dateTime = message.dateTime.toDate();
+      });
       tickets.push({
          ...temp, 
          id: ticket.id,

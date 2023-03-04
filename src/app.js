@@ -46,7 +46,7 @@ export function App () {
    }
 
    return (
-   <Box sx={{backgroundColor: 'primary.light', alignContent: 'center'}}>
+   <Box sx={{alignContent: 'center', height: '100%'}}>
       <AppBar id='head' color='secondary' position='static'><Head newTicket={newTicket} authenticated={authenticated} authenticate={authenticate}/></AppBar>
       {authenticated ? tickets ? <Ticketing tickets={tickets} setView={setView} newMessage={newMessage} authenticated={authenticated} /> : null : <Auth authenticate={authenticate} />}
    </Box>

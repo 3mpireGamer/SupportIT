@@ -7,9 +7,13 @@ import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { blue, blueGrey, deepOrange } from '@mui/material/colors';
+import { CssBaseline } from '@mui/material';
 
 const theme = createTheme({
   palette: {
+    background: {
+      default: blue[50]
+    },
     primary: {
       light: blue[50], 
       main: blue[600], 
@@ -32,6 +36,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
+      <CssBaseline />
       <App />
     </ThemeProvider>
   </React.StrictMode>
