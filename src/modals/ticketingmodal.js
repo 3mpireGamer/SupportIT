@@ -4,14 +4,14 @@ import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentatio
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 
 const ticketTemplate = {
-   author: 'Luca', 
+   author: '', 
    title: '', 
    status: 'Open', 
    category: '',
    desc: '', 
    caseno: 0, 
-   created: '1 January 2023',
-   updated: '2 January 2023',
+   created: '1 Jan 2023',
+   updated: '2 Jan 2023',
    messages: [{}]
 } 
 let ticket = {...ticketTemplate}

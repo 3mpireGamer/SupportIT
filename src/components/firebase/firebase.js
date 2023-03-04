@@ -20,11 +20,15 @@ export function getTickets(snapshot) {
    let tickets = [];
    let ticketsPromise = new Promise((resolve) => {   
    snapshot.docs.forEach(ticket => {
+      let temp = {...ticket.data()}
+      temp.created = temp.created.toDate();
+      temp.updated = temp.updated.toDate();
       tickets.push({
-         ...ticket.data(), 
+         ...temp, 
          id: ticket.id,
-      });    
+      }); 
    });
+   // console.log(tickets);
    resolve(tickets);
    });
    return ticketsPromise
