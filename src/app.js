@@ -11,12 +11,13 @@ const ticketCollection = firebaseInit();
 export function App () {
    const [authenticated, authenticate] = useState('admin');
    const [tickets, setTickets] = useState();
+   const [viewAll, setView] = useState(1);
 
    useEffect(() => {
       onSnapshot(ticketCollection, snapshot => {
-         getTickets(snapshot).then(result => {setTickets(result)})
+         getTickets(snapshot, viewAll ? false : authenticated).then(result => {setTickets(result)});
       })
-   }, [])
+   }, [authenticated, viewAll]);
 
    const newTicket = (ticket) => {
       ticket.author = authenticated.charAt(0).toUpperCase() + authenticated.slice(1);
@@ -34,7 +35,7 @@ export function App () {
    return (
    <Box sx={{backgroundColor: 'primary.light', alignContent: 'center'}}>
       <AppBar id='head' color='secondary' position='static'><Head newTicket={newTicket} authenticated={authenticated} authenticate={authenticate}/></AppBar>
-      {authenticated ? tickets ? <Ticketing tickets={tickets}/> : null : <Auth authenticate={authenticate}/>}
+      {authenticated ? tickets ? <Ticketing tickets={tickets} setView={setView} /> : null : <Auth authenticate={authenticate} />}
    </Box>
 )}
 

@@ -16,7 +16,7 @@ export function firebaseInit() {
    return collection(db, 'tickets')
 }
 
-export function getTickets(snapshot) {
+export function getTickets(snapshot, filter) {
    let tickets = [];
    let ticketsPromise = new Promise((resolve) => {   
    snapshot.docs.forEach(ticket => {
@@ -28,7 +28,11 @@ export function getTickets(snapshot) {
          id: ticket.id,
       }); 
    });
-   // console.log(tickets);
+   if (filter) {
+      tickets = tickets.filter(ticket => {
+         return ticket.author.toLowerCase() === filter
+      });
+   }
    resolve(tickets);
    });
    return ticketsPromise
