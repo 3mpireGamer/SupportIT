@@ -6,14 +6,14 @@ import '@fontsource/roboto/400.css';
 import '@fontsource/roboto/500.css';
 import '@fontsource/roboto/700.css';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
-import { lightBlue, blueGrey, deepOrange } from '@mui/material/colors';
+import { blue, blueGrey, deepOrange } from '@mui/material/colors';
 
 const theme = createTheme({
   palette: {
     primary: {
-      light: lightBlue[50], 
-      main: lightBlue[400], 
-      dark: lightBlue[600],
+      light: blue[50], 
+      main: blue[600], 
+      dark: blue[800],
     },
     secondary: {
       light: blueGrey['A100'], 
@@ -22,7 +22,7 @@ const theme = createTheme({
     }, 
     error: {
       light: deepOrange[500], 
-      main: deepOrange[600], 
+      main: deepOrange[800], 
       dark: deepOrange['A700'],
     }
   },
