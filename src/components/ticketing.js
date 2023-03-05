@@ -1,18 +1,34 @@
-import React, { useState } from 'react';
-import { Grid, Tab, Tabs, Typography } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+import { Grid, Pagination, Tab, Tabs, Typography } from '@mui/material';
 import { ChatModal } from '../modals/chatmodal';
+
+const pageSize = 10;
 
 export function Ticketing({ tickets, setView, newMessage, authenticated }) {
    const [openedTicket, openTicket] = useState(0);
-   const [tab, setTab] = useState(1);
+   const [tab, setTab] = useState(authenticated);
+   const [page, setPage] = useState({
+      count: Math.ceil(tickets.length/pageSize), 
+      start: 0, 
+      end: pageSize
+   });
+   useEffect(() => {
+      setPage({...page, count: Math.ceil(tickets.length/pageSize)});
+   }, [tickets])
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return ( 
    <Grid container id='ticketing' direction='column' alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
-      <Grid item><Tabs value={tab} onChange={(e, index) => {setTab(index); setView(index)}}>
-         <Tab value={1} label='View All Cases' />
-         <Tab value={0} label='View My Cases' />
+      <Grid item><Tabs value={tab} onChange={(_, view) => {setTab(view); setView(view)}}>
+         <Tab value={false} label='View All Cases' />
+         <Tab value={authenticated} label='View My Cases' />
+         <Tab value={'Closed'} label='View Closed Cases' />
       </Tabs></Grid>
-      <TicketList tickets={tickets} openTicket={openTicket}/>
+      <TicketList tickets={tickets.slice(page.start, page.end)} openTicket={openTicket}/>
+      <Pagination count={page.count} onChange={(_, pageNum) => {
+         let start = (pageNum - 1) * pageSize;
+         let end = (pageNum - 1) * pageSize + pageSize;
+         setPage({...page, start, end})
+      }} />
       <ChatModal tickets={tickets} openedTicket={openedTicket} openTicket={openTicket} newMessage={newMessage} authenticated={authenticated} />
    </Grid>
 );}

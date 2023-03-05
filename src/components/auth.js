@@ -37,7 +37,7 @@ export function Auth({ authenticate }) {
    const checkAuth = () => {
       let authError = 'Invalid username or password!';
       users.forEach(user => {
-         if (username === user.username && password === user.password) {
+         if (username.toLowerCase() === user.username && password === user.password) {
             authenticate(username.charAt(0).toUpperCase() + username.slice(1).toLowerCase());
             authError = false;
          } 

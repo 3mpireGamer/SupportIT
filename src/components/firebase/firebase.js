@@ -37,9 +37,19 @@ export function getTickets(snapshot, filter) {
          id: ticket.id,
       }); 
    });
-   if (filter) {
+   if(filter) { switch(filter) {
+      case 'Closed':
+         tickets = tickets.filter(ticket => {
+            return ticket.status === 'Closed'
+         });
+         break;
+      default: 
+         tickets = tickets.filter(ticket => {
+            return ticket.author === filter && ticket.status !== 'Closed'
+         });
+   }} else {
       tickets = tickets.filter(ticket => {
-         return ticket.author.toLowerCase() === filter
+         return ticket.status !== 'Closed'
       });
    }
    resolve(tickets);

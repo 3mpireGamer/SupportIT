@@ -9,15 +9,15 @@ import { onSnapshot } from 'firebase/firestore'
 const fs = firestoreInit();
 
 export function App () {
-   const [authenticated, authenticate] = useState('Admin');
+   const [authenticated, authenticate] = useState('');
    const [tickets, setTickets] = useState();
-   const [viewAll, setView] = useState(1);
+   const [view, setView] = useState(authenticated);
 
    useEffect(() => {
       onSnapshot(fs.query, snapshot => {
-         getTickets(snapshot, viewAll ? false : authenticated).then(result => {setTickets(result)});
+         getTickets(snapshot, view).then(result => {setTickets(result); console.log(result)});
       })
-   }, [authenticated, viewAll]);
+   }, [authenticated, view]);
 
    const newTicket = (ticket) => {
       ticket.author = authenticated;
