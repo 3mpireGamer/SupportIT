@@ -3,7 +3,7 @@ import { Box,  Grid, Typography } from '@mui/material';
 const chatHeight = 400;
 export function getChatHeight() { return chatHeight }
 
-const modalHeight = 214;
+const modalHeight = 34;
 export function doesChatFit() {
    let docHeight = document.getElementById('root').offsetHeight;
    let headHeight = document.getElementById('head').offsetHeight;

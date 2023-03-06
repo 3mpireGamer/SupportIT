@@ -5,17 +5,19 @@ import { Head } from "./components/head";
 import { Auth } from "./components/auth"
 import { addTicket, firestoreInit, getTickets, updateTicket } from "./components/firebase/firebase";
 import { onSnapshot } from 'firebase/firestore'
+import { ChatModal } from './modals/chatmodal';
 
 const fs = firestoreInit();
 
 export function App () {
+   const [openedTicket, openTicket] = useState(0);
    const [authenticated, authenticate] = useState('');
    const [tickets, setTickets] = useState();
    const [view, setView] = useState(authenticated);
 
    useEffect(() => {
       onSnapshot(fs.query, snapshot => {
-         getTickets(snapshot, view).then(result => {setTickets(result); console.log(result)});
+         getTickets(snapshot, view).then(result => {setTickets(result)});
       })
    }, [authenticated, view]);
 
@@ -44,12 +46,24 @@ export function App () {
          updateTicket(fs.db, ticket);
       }
    }
+   const closeTicket = (ticket) => {
+      ticket.updated = new Date();
+      ticket.status = 'Closed';
+      ticket.messages.push({
+         id: generateId(),
+         author: authenticated, 
+         content: authenticated + ' closed this ticket. ', 
+         dateTime: new Date()
+      });
+      updateTicket(fs.db, ticket);
+   }
 
    return (
    <Box sx={{alignContent: 'center', height: '100%'}}>
       <AppBar id='head' color='secondary' position='static'><Head newTicket={newTicket} authenticated={authenticated} authenticate={authenticate}/></AppBar>
-      {authenticated ? tickets ? <Ticketing tickets={tickets} setView={setView} newMessage={newMessage} authenticated={authenticated} />
+      {authenticated ? tickets ? <Ticketing tickets={tickets} setView={setView} openTicket={openTicket} authenticated={authenticated} />
       : null : <Auth authenticate={authenticate} />}
+      {tickets ? <ChatModal tickets={tickets} openedTicket={openedTicket} openTicket={openTicket} newMessage={newMessage} authenticated={authenticated} closeTicket={closeTicket}/> : null}
    </Box>
 )}
 

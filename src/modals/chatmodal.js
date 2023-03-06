@@ -1,13 +1,14 @@
 import React, { useEffect, useState } from 'react'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import SendIcon from '@mui/icons-material/Send';
-import { ClickAwayListener, Grid, IconButton, Popper, TextField, Typography } from '@mui/material';
+import { Box, Button, ClickAwayListener, Grid, IconButton, Popover, Popper, TextField } from '@mui/material';
 import { getChatHeight, getMessages, generateBoundingRect } from '../components/chat'
 
 
-export function ChatModal({ tickets, openedTicket, openTicket, newMessage, authenticated }) {
+export function ChatModal({ tickets, openedTicket, openTicket, newMessage, authenticated, closeTicket}) {
    const [virtualEl, setVirtualEl] = useState();
    const [placement, setPlacement] = useState();
+   const [confirm, setConfirm] = useState(false);
    const selectedTicket = tickets.filter(ticket => {
       return ticket.id === openedTicket
    });
@@ -53,13 +54,19 @@ export function ChatModal({ tickets, openedTicket, openTicket, newMessage, authe
    }
 
    return (
-   <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '4px', backgroundColor: 'white'}}>
-      <ClickAwayListener onClickAway={() => {openTicket(0)}}> 
+   <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '8px', backgroundColor: 'white'}}>
+      <ClickAwayListener onClickAway={() => {openTicket(0)}}>
+      <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '8px', padding: '8px'}}>
       <Grid container width='440px' spacing={3} padding={2}>
-         <Grid item xs={2}><ChatBubbleOutlineIcon /></Grid>
-         <Grid item xs={10}><Typography textAlign='right' paddingRight={1}>
-            Case Number: {selectedTicket.length !== 0 ? selectedTicket[0].caseno : ''}
-         </Typography></Grid>
+         <Grid item xs={2}><ChatBubbleOutlineIcon fontSize='large'/></Grid>
+         <Grid item xs={4}></Grid><Grid item xs={6}>
+         {confirm ? <Button onClick={() => {closeTicket(selectedTicket[0]); setConfirm(false); openTicket(0)}}>Close {selectedTicket[0].caseno}?</Button>
+         : <Button variant='text' size='large' onClick={() => {setConfirm(true)}}>
+            Case {selectedTicket.length !== 0 ? selectedTicket[0].caseno : ''}
+         </Button>}
+         
+         
+         </Grid>
          <Grid item xs={12} height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
             <Grid container direction='column' spacing={2}>{messages}</Grid>
          </Grid>
@@ -68,6 +75,6 @@ export function ChatModal({ tickets, openedTicket, openTicket, newMessage, authe
          id='content' variant='outlined' label='Send Message' multiline maxRows={3} minRows={3}></TextField></Grid>
          <Grid item xs={2}><IconButton color='primary' onClick={() => {handleNewMessage(selectedTicket[0])}}><SendIcon /></IconButton></Grid>
       </Grid>
-      </ClickAwayListener>
+      </Box></ClickAwayListener>
    </Popper>
 );}

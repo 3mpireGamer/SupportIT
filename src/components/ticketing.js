@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from 'react';
 import { Grid, Pagination, Tab, Tabs, Typography } from '@mui/material';
-import { ChatModal } from '../modals/chatmodal';
 
 const pageSize = 10;
 
-export function Ticketing({ tickets, setView, newMessage, authenticated }) {
-   const [openedTicket, openTicket] = useState(0);
+export function Ticketing({ tickets, setView, openTicket, authenticated }) {
    const [tab, setTab] = useState(authenticated);
    const [page, setPage] = useState({
       count: Math.ceil(tickets.length/pageSize), 
@@ -29,7 +27,7 @@ export function Ticketing({ tickets, setView, newMessage, authenticated }) {
          let end = (pageNum - 1) * pageSize + pageSize;
          setPage({...page, start, end})
       }} />
-      <ChatModal tickets={tickets} openedTicket={openedTicket} openTicket={openTicket} newMessage={newMessage} authenticated={authenticated} />
+
    </Grid>
 );}
 
