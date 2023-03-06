@@ -22,7 +22,7 @@ export function firestoreInit() {
 }
 
 
-export function getTickets(snapshot, filter) {
+export function getLiveTickets(snapshot, filter) {
    let tickets = [];
    let ticketsPromise = new Promise((resolve) => {   
    snapshot.docs.forEach(ticket => {

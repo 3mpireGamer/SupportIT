@@ -1,35 +1,54 @@
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { Grid, Pagination, Tab, Tabs, Typography } from '@mui/material';
+import { AuthContext, FirestoreContext } from '../app';
+import { onSnapshot } from 'firebase/firestore';
+import { getLiveTickets } from './firebase/firebase';
+import { ChatModal } from '../modals/chatmodal'
+import { parseMonth } from './utils';
+
 
 const pageSize = 10;
 
-export function Ticketing({ tickets, setView, openTicket, authenticated }) {
-   const [tab, setTab] = useState(authenticated);
+export function Ticketing() {
+   const authenticated = useContext(AuthContext);
+   const fs = useContext(FirestoreContext);
+   
+   const [tickets, setTickets] = useState([]);
+   const [openedTicket, openTicket] = useState('');
+   const [view, setView] = useState(authenticated);
    const [page, setPage] = useState({
       count: Math.ceil(tickets.length/pageSize), 
       start: 0, 
       end: pageSize
    });
+
    useEffect(() => {
-      setPage({...page, count: Math.ceil(tickets.length/pageSize)});
+      onSnapshot(fs.query, snapshot => {
+         getLiveTickets(snapshot, view).then(result => {setTickets(result)});
+   })}, [fs.query, view]);
+
+   useEffect(() => {
+      setPage(p => {return {...p, count: Math.ceil(tickets.length/pageSize)}});
    }, [tickets])
+
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return ( 
    <Grid container id='ticketing' direction='column' alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
-      <Grid item><Tabs value={tab} onChange={(_, view) => {setTab(view); setView(view)}}>
+      <Grid item><Tabs value={view} onChange={(_, view) => {setView(view)}}>
          <Tab value={false} label='View All Cases' />
          <Tab value={authenticated} label='View My Cases' />
          <Tab value={'Closed'} label='View Closed Cases' />
       </Tabs></Grid>
       <TicketList tickets={tickets.slice(page.start, page.end)} openTicket={openTicket}/>
-      <Pagination count={page.count} onChange={(_, pageNum) => {
+      <Grid item xs={12}><Pagination count={page.count} onChange={(_, pageNum) => {
          let start = (pageNum - 1) * pageSize;
          let end = (pageNum - 1) * pageSize + pageSize;
          setPage({...page, start, end})
-      }} />
-
+      }} /></Grid>
+      <ChatModal tickets={tickets} openedTicket={openedTicket} openTicket={openTicket} />
    </Grid>
-);}
+   )
+}
 
 const TicketList = ({ tickets, openTicket }) => {
    const ticketsList = tickets.map(ticket => {
@@ -57,21 +76,4 @@ const TicketList = ({ tickets, openTicket }) => {
 
 function formatDate(date) {
    return parseMonth(date.getMonth()) + ' ' + date.getDate() + ' ' + date.getFullYear()
-}
-function parseMonth(month) {
-   switch(month) {
-      case 0: return 'Jan'
-      case 1: return 'Feb'
-      case 2: return 'Mar'
-      case 3: return 'Apr'
-      case 4: return 'May'
-      case 5: return 'Jun'
-      case 6: return 'Jul'
-      case 7: return 'Aug'
-      case 8: return 'Sep'
-      case 9: return 'Oct'
-      case 10: return 'Nov'
-      case 11: return 'Dec'
-      default: return ''
-   }
 }

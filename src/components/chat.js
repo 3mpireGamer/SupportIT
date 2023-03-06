@@ -1,20 +1,17 @@
 import { Box,  Grid, Typography } from '@mui/material';
+import { parseMonth } from './utils';
 
+
+const modalHeight = 34;
 const chatHeight = 400;
 export function getChatHeight() { return chatHeight }
 
-const modalHeight = 34;
-export function doesChatFit() {
-   let docHeight = document.getElementById('root').offsetHeight;
-   let headHeight = document.getElementById('head').offsetHeight;
+export function doesChatFit(headHeight, docHeight) {
    return docHeight > (chatHeight + modalHeight + headHeight)
 }
 export function generateBoundingRect() {
-   let chatFits = doesChatFit()
-   let headHeight = document.getElementById('head').offsetHeight;
-   let docHeight = document.getElementById('root').offsetHeight;
-   let docWidth = document.getElementById('root').offsetWidth;
-   let scrollY = window.scrollY;
+   let [headHeight, docHeight, docWidth, scrollY] = getDocValues();
+   let chatFits = doesChatFit(headHeight, docHeight);
    let boundingClientRect = () => ({
       width: '0', height: '0', left: docWidth,
       top: chatFits 
@@ -51,23 +48,15 @@ export function getMessages(ticket, authenticated) {
    }));
 }
 
+
+function getDocValues() {
+   return [
+      document.getElementById('head').offsetHeight, 
+      document.getElementById('root').offsetHeight, 
+      document.getElementById('root').offsetWidth, 
+      window.scrollY
+   ]
+}
 function formatDate(date) {
    return parseMonth(date.getMonth()) + ' ' + date.getDate() + ' - ' + date.getHours() + ':' + date.getMinutes()
-}
-function parseMonth(month) {
-   switch(month) {
-      case 0: return 'Jan'
-      case 1: return 'Feb'
-      case 2: return 'Mar'
-      case 3: return 'Apr'
-      case 4: return 'May'
-      case 5: return 'Jun'
-      case 6: return 'Jul'
-      case 7: return 'Aug'
-      case 8: return 'Sep'
-      case 9: return 'Oct'
-      case 10: return 'Nov'
-      case 11: return 'Dec'
-      default: return ''
-   }
 }

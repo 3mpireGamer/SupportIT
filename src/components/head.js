@@ -1,9 +1,28 @@
-import React from 'react';
+import React, { useCallback, useContext } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
 import { TicketingModal } from '../modals/ticketingmodal';
+import { AuthContext, FirestoreContext } from '../app';
+import { generateCaseNo, generateId } from "./utils";
+import { addTicket } from './firebase/firebase';
 
-export function Head({ newTicket, authenticated, authenticate }) {
-   authenticated = authenticated.charAt(0).toUpperCase() + authenticated.slice(1);
+export function Head({ authenticate }) {
+   const authenticated = useContext(AuthContext);
+   const fs = useContext(FirestoreContext);
+
+   const newTicket = useCallback((ticket) => {
+      ticket.author = authenticated;
+      ticket.caseno = generateCaseNo(authenticated);
+      ticket.created = new Date();
+      ticket.updated = new Date();
+      ticket.messages = [{
+         id: generateId(),
+         author: ticket.author, 
+         content: 'Hello, I need help with ' + ticket.category + '. ' + ticket.desc,
+         dateTime: new Date()
+      }];
+      addTicket(fs.collection, ticket);
+   }, [authenticated, fs.collection])
+
    return (
       <Grid container direction='column' spacing={2} alignContent='center'>
          <Grid item xs={12} width='100%'><Grid container direction='row' spacing={1} alignContent='center'>
