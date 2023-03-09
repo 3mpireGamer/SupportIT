@@ -1,3 +1,5 @@
+import React, { useContext, useEffect } from 'react'
+import { AuthContext } from '../app';
 import { Box,  Grid, Typography } from '@mui/material';
 import { parseMonth } from './utils';
 
@@ -26,10 +28,15 @@ export function generateBoundingRect() {
    return ({boundingClientRect, placementBool})
 }
 
-export function getMessages(ticket, authenticated) {
+export function Chat({ ticket }) {
+   const authenticated = useContext(AuthContext);
+   useEffect(() => {
+      document.getElementById(ticket.messages[ticket.messages.length-1].id).scrollIntoView();
+   }, [])
+
    return (ticket.messages.map(message => {
       return authenticated === message.author
-      ? (<Grid item key={message.id}><Grid container>
+      ? (<Grid item id={message.id} key={message.id}><Grid container>
       <Grid item xs={2}></Grid>
       <Grid item xs={10}>
          <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '8px', padding: '8px'}}>
@@ -37,7 +44,7 @@ export function getMessages(ticket, authenticated) {
             <Typography textAlign='right'>{message.content}</Typography>
          </Box>
       </Grid></Grid></Grid>)
-      : (<Grid item key={message.id}><Grid container>
+      : (<Grid item id={message.id} key={message.id}><Grid container>
       <Grid item xs={10}>
          <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '8px', padding: '8px'}}>
             <Typography textAlign='left' fontWeight='bold'>{message.author} | {formatDate(message.dateTime)}</Typography>

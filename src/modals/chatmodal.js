@@ -1,15 +1,15 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
+import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
 import SendIcon from '@mui/icons-material/Send';
-import { Box, Button, ClickAwayListener, Grid, IconButton, Popper, TextField } from '@mui/material';
-import { getChatHeight, getMessages, generateBoundingRect } from '../components/chat'
+import { Box, Button, ButtonGroup, ClickAwayListener, Grid, IconButton, Popper, TextField } from '@mui/material';
+import { getChatHeight, Chat, generateBoundingRect } from '../components/chat'
 import { AuthContext, FirestoreContext } from '../app';
 import { generateId } from '../components/utils';
 import { updateTicket, getLiveTickets } from '../components/firebase/firebase';
 import { onSnapshot } from 'firebase/firestore';
 
 
-// Add auto scroll to bottom of chat window
 export function ChatModal({ openedTicket, openTicket}) {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
@@ -26,7 +26,6 @@ export function ChatModal({ openedTicket, openTicket}) {
    const selectedTicket = tickets.filter(ticket => {
       return ticket.id === openedTicket
    });
-   const messages = selectedTicket.length !== 0 ? getMessages(selectedTicket[0], authenticated) : '';
    
    const setAnchor = () => {
       let {boundingClientRect, placementBool} = generateBoundingRect();
@@ -66,13 +65,13 @@ export function ChatModal({ openedTicket, openTicket}) {
       }
    }, [fs.db, authenticated])
 
-   const handleNewMessage = (ticket, e=false) => {
+   const handleNewMessage = useCallback((ticket, e=false) => {
       let messageBox = e ? e.target : document.getElementById('content');
       messageBox.focus();
       newMessage(ticket, messageBox.value.replace(/(\r\n|\n|\r)/gm, "")); 
       setTimeout(() => {messageBox.value = ''}, 1);
 
-   }
+   }, [newMessage])
 
    const closeTicket = useCallback((ticket) => {
       setConfirm(false); 
@@ -91,20 +90,21 @@ export function ChatModal({ openedTicket, openTicket}) {
 
    return (
    <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '8px', backgroundColor: 'white'}}>
-      <ClickAwayListener onClickAway={() => {openTicket('')}}>
+      <ClickAwayListener onClickAway={() => {openTicket(''); setConfirm(false)}}>
       <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '8px', padding: '8px'}}>
       <Grid container width='440px' spacing={3} padding={2}>
          <Grid item xs={2}><ChatBubbleOutlineIcon fontSize='large'/></Grid>
-         <Grid item xs={4}></Grid><Grid item xs={6}>
-         {confirm ? <Button onClick={() => {closeTicket(selectedTicket[0])}}>Close {selectedTicket[0].caseno}?</Button>
+         <Grid item xs={10}>
+         {confirm ? <ButtonGroup variant='text'>
+            <Button onClick={() => {closeTicket(selectedTicket[0])}}>Close {selectedTicket[0].caseno}</Button>
+            <IconButton color='error' onClick={() => {setConfirm(false)}}><CancelPresentationTwoToneIcon /></IconButton>
+         </ButtonGroup>
          : <Button variant='text' size='large' onClick={() => {setConfirm(true)}}>
             Case {selectedTicket.length !== 0 ? selectedTicket[0].caseno : ''}
          </Button>}
-         
-         
          </Grid>
          <Grid item xs={12} height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
-            <Grid container direction='column' spacing={2}>{messages}</Grid>
+            <Grid container direction='column' spacing={2}><Chat ticket={selectedTicket[0]} /></Grid>
          </Grid>
          <Grid item xs={10}><TextField fullWidth sx={{backgroundColor: 'secondary.main', borderRadius: '4px'}} 
          onKeyDown={(e) => {if (e.key === 'Enter') {handleNewMessage(selectedTicket[0], e)}}}

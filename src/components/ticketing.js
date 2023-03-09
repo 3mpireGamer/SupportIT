@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, IconButton, Pagination, Tab, Tabs, Typography } from '@mui/material';
+import { Grid, Pagination, Tab, Tabs, Typography } from '@mui/material';
 import SyncIcon from '@mui/icons-material/Sync';
 import { AuthContext, FirestoreContext } from '../app';
 import { getTickets } from './firebase/firebase';
