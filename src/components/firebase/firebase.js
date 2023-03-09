@@ -1,5 +1,5 @@
 import { initializeApp } from 'firebase/app';
-import { addDoc, collection, doc, getFirestore, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { addDoc, collection, doc, getDocs, getFirestore, orderBy, query, updateDoc, where } from 'firebase/firestore';
 
 export function firestoreInit() {
    const firebaseConfig = {
@@ -21,12 +21,47 @@ export function firestoreInit() {
    }
 }
 
-
-export function getLiveTickets(snapshot, filter) {
+export function getTickets(query, filter) {
+   let tickets = [];
+   let ticketsPromise = new Promise((resolve) => {
+   getDocs(query).then((snapshot) => {
+      snapshot.docs.forEach(ticket => {
+         let temp = {...ticket.data()};
+         temp.created = temp.created.toDate();
+         temp.updated = temp.updated.toDate();
+         temp.messages.forEach(message => {
+            message.dateTime = message.dateTime.toDate();
+         });
+         tickets.push({
+            ...temp, 
+            id: ticket.id,
+         }); 
+      })
+      if(filter) { switch(filter) {
+         case 'Closed':            
+            tickets = tickets.filter(ticket => {
+               return ticket.status === 'Closed'
+            });
+            break;
+         default: 
+         tickets = tickets.filter(ticket => {
+            return ticket.author === filter && ticket.status !== 'Closed'
+         });         
+      }} else {
+         tickets = tickets.filter(ticket => {
+            return ticket.status !== 'Closed'
+         });
+      }
+      resolve(tickets);
+      });
+   });
+   return ticketsPromise
+}
+export function getLiveTickets(snapshot) {
    let tickets = [];
    let ticketsPromise = new Promise((resolve) => {   
    snapshot.docs.forEach(ticket => {
-      let temp = {...ticket.data()}
+      let temp = {...ticket.data()};
       temp.created = temp.created.toDate();
       temp.updated = temp.updated.toDate();
       temp.messages.forEach(message => {
@@ -37,23 +72,8 @@ export function getLiveTickets(snapshot, filter) {
          id: ticket.id,
       }); 
    });
-   if(filter) { switch(filter) {
-      case 'Closed':
-         tickets = tickets.filter(ticket => {
-            return ticket.status === 'Closed'
-         });
-         break;
-      default: 
-         tickets = tickets.filter(ticket => {
-            return ticket.author === filter && ticket.status !== 'Closed'
-         });
-   }} else {
-      tickets = tickets.filter(ticket => {
-         return ticket.status !== 'Closed'
-      });
-   }
    resolve(tickets);
-   });
+   })
    return ticketsPromise
 } 
 

@@ -5,12 +5,19 @@ import { Box, Button, ClickAwayListener, Grid, IconButton, Popper, TextField } f
 import { getChatHeight, getMessages, generateBoundingRect } from '../components/chat'
 import { AuthContext, FirestoreContext } from '../app';
 import { generateId } from '../components/utils';
-import { updateTicket } from '../components/firebase/firebase';
+import { updateTicket, getLiveTickets } from '../components/firebase/firebase';
+import { onSnapshot } from 'firebase/firestore';
 
 
-export function ChatModal({ tickets, openedTicket, openTicket}) {
+export function ChatModal({ openedTicket, openTicket}) {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
+
+   const [tickets, setTickets] = useState([]);
+   useEffect(() => {
+      onSnapshot(fs.collection, snapshot => {
+         getLiveTickets(snapshot).then(result => {setTickets(result)});
+   })}, [fs.collection]);
 
    const [virtualEl, setVirtualEl] = useState();
    const [placement, setPlacement] = useState();

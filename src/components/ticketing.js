@@ -1,8 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Grid, Pagination, Tab, Tabs, Typography } from '@mui/material';
 import { AuthContext, FirestoreContext } from '../app';
-import { onSnapshot } from 'firebase/firestore';
-import { getLiveTickets } from './firebase/firebase';
+import { getTickets } from './firebase/firebase';
 import { ChatModal } from '../modals/chatmodal'
 import { parseMonth } from './utils';
 
@@ -12,9 +11,10 @@ const pageSize = 10;
 export function Ticketing() {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
-   
+
    const [tickets, setTickets] = useState([]);
    const [openedTicket, openTicket] = useState('');
+   const [refresh, setRefresh] = useState(false);
    const [view, setView] = useState(authenticated);
    const [page, setPage] = useState({
       count: Math.ceil(tickets.length/pageSize), 
@@ -22,14 +22,13 @@ export function Ticketing() {
       end: pageSize
    });
 
+   // Move live tickets into ChatModal, add refresh button to ticketing for manual tickets, refactor functions in firebase.js
    useEffect(() => {
-      onSnapshot(fs.query, snapshot => {
-         getLiveTickets(snapshot, view).then(result => {setTickets(result)});
-   })}, [fs.query, view]);
-
+      getTickets(fs.query, view).then(result => {setTickets(result)});
+   }, [fs.query, view, authenticated, refresh]);
    useEffect(() => {
       setPage(p => {return {...p, count: Math.ceil(tickets.length/pageSize)}});
-   }, [tickets])
+   }, [tickets]);
 
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return ( 
@@ -45,7 +44,7 @@ export function Ticketing() {
          let end = (pageNum - 1) * pageSize + pageSize;
          setPage({...page, start, end})
       }} /></Grid>
-      <ChatModal tickets={tickets} openedTicket={openedTicket} openTicket={openTicket} />
+      <ChatModal openedTicket={openedTicket} openTicket={openTicket} />
    </Grid>
    )
 }
