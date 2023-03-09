@@ -9,6 +9,7 @@ import { updateTicket, getLiveTickets } from '../components/firebase/firebase';
 import { onSnapshot } from 'firebase/firestore';
 
 
+// Add auto scroll to bottom of chat window
 export function ChatModal({ openedTicket, openTicket}) {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);

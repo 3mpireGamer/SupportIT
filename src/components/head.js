@@ -5,7 +5,7 @@ import { AuthContext, FirestoreContext } from '../app';
 import { generateCaseNo, generateId } from "./utils";
 import { addTicket } from './firebase/firebase';
 
-export function Head({ authenticate }) {
+export function Head({ authenticate, refresh, toggleRefresh }) {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
 
@@ -21,7 +21,8 @@ export function Head({ authenticate }) {
          dateTime: new Date()
       }];
       addTicket(fs.collection, ticket);
-   }, [authenticated, fs.collection])
+      toggleRefresh(!refresh);
+   }, [authenticated, fs.collection, refresh, toggleRefresh])
 
    return (
       <Grid container direction='column' spacing={2} alignContent='center'>

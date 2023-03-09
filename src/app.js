@@ -12,12 +12,13 @@ export const AuthContext = React.createContext();
 
 export function App () {
    const [authenticated, authenticate] = useState('');
+   const [refresh, toggleRefresh] = useState(false);
 
    return (
    <Box sx={{alignContent: 'center', height: '100%'}}>
    <AuthContext.Provider value={authenticated}><FirestoreContext.Provider value={fs}>
-      <AppBar id='head' color='secondary' position='static'><Head authenticate={authenticate}/></AppBar>
-      {authenticated ? <Ticketing/> : <Auth authenticate={authenticate} />}
+      <AppBar id='head' color='secondary' position='static'><Head authenticate={authenticate} refresh={refresh} toggleRefresh={toggleRefresh} /></AppBar>
+      {authenticated ? <Ticketing refresh={refresh} toggleRefresh={toggleRefresh} /> : <Auth authenticate={authenticate} />}
       </FirestoreContext.Provider></AuthContext.Provider>
    </Box>
 )}

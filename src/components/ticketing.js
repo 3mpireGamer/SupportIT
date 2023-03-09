@@ -1,5 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, Pagination, Tab, Tabs, Typography } from '@mui/material';
+import { Grid, IconButton, Pagination, Tab, Tabs, Typography } from '@mui/material';
+import SyncIcon from '@mui/icons-material/Sync';
 import { AuthContext, FirestoreContext } from '../app';
 import { getTickets } from './firebase/firebase';
 import { ChatModal } from '../modals/chatmodal'
@@ -8,27 +9,25 @@ import { parseMonth } from './utils';
 
 const pageSize = 10;
 
-export function Ticketing() {
+export function Ticketing({ refresh, toggleRefresh }) {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
-
    const [tickets, setTickets] = useState([]);
    const [openedTicket, openTicket] = useState('');
-   const [refresh, setRefresh] = useState(false);
    const [view, setView] = useState(authenticated);
    const [page, setPage] = useState({
       count: Math.ceil(tickets.length/pageSize), 
       start: 0, 
       end: pageSize
    });
-
-   // Move live tickets into ChatModal, add refresh button to ticketing for manual tickets, refactor functions in firebase.js
-   useEffect(() => {
-      getTickets(fs.query, view).then(result => {setTickets(result)});
-   }, [fs.query, view, authenticated, refresh]);
    useEffect(() => {
       setPage(p => {return {...p, count: Math.ceil(tickets.length/pageSize)}});
    }, [tickets]);
+   
+   useEffect(() => {
+      getTickets(fs.query, view).then(result => {setTickets(result)});
+   }, [fs.query, view, authenticated, refresh]);
+   
 
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return ( 
@@ -37,6 +36,7 @@ export function Ticketing() {
          <Tab value={false} label='View All Cases' />
          <Tab value={authenticated} label='View My Cases' />
          <Tab value={'Closed'} label='View Closed Cases' />
+         <Tab onClick={() => {toggleRefresh(!refresh); setView(view)}} label={<SyncIcon />} />
       </Tabs></Grid>
       <TicketList tickets={tickets.slice(page.start, page.end)} openTicket={openTicket}/>
       <Grid item xs={12}><Pagination count={page.count} onChange={(_, pageNum) => {
