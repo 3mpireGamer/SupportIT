@@ -2,8 +2,8 @@ import React, { useCallback, useContext } from 'react';
 import { Button, Grid, Typography } from '@mui/material';
 import { TicketingModal } from '../modals/ticketingmodal';
 import { AuthContext, FirestoreContext } from '../app';
-import { generateCaseNo, generateId } from "./utils";
-import { addTicket } from './firebase/firebase';
+import { generateCaseNo, generateId } from "../utils";
+import { addTicket } from './firebase';
 
 export function Head({ authenticate, refresh, toggleRefresh }) {
    const authenticated = useContext(AuthContext);

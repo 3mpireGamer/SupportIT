@@ -2,9 +2,9 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Grid, Pagination, Tab, Tabs, Typography } from '@mui/material';
 import SyncIcon from '@mui/icons-material/Sync';
 import { AuthContext, FirestoreContext } from '../app';
-import { getTickets } from './firebase/firebase';
+import { getTickets } from './firebase';
 import { ChatModal } from '../modals/chatmodal'
-import { parseMonth } from './utils';
+import { parseMonth } from '../utils';
 
 
 const pageSize = 10;
@@ -44,7 +44,7 @@ export function Ticketing({ refresh, toggleRefresh }) {
          let end = (pageNum - 1) * pageSize + pageSize;
          setPage({...page, start, end})
       }} /></Grid>
-      <ChatModal openedTicket={openedTicket} openTicket={openTicket} />
+      <ChatModal openedTicket={openedTicket} openTicket={openTicket} refresh={refresh} toggleRefresh={toggleRefresh} />
    </Grid>
    )
 }

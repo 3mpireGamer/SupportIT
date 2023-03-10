@@ -22,9 +22,9 @@ export function firestoreInit() {
 }
 
 export function getTickets(query, filter) {
-   let tickets = [];
    let ticketsPromise = new Promise((resolve) => {
    getDocs(query).then((snapshot) => {
+      let tickets = [];
       snapshot.docs.forEach(ticket => {
          let temp = {...ticket.data()};
          temp.created = temp.created.toDate();
@@ -57,26 +57,22 @@ export function getTickets(query, filter) {
    });
    return ticketsPromise
 }
-export function getLiveTickets(snapshot) {
-   let tickets = [];
-   let ticketsPromise = new Promise((resolve) => {   
-   snapshot.docs.forEach(ticket => {
-      let temp = {...ticket.data()};
-      temp.created = temp.created.toDate();
-      temp.updated = temp.updated.toDate();
-      temp.messages.forEach(message => {
+export function getLiveUpdate(snapshot) {
+   let ticketPromise = new Promise((resolve) => {   
+      let ticket = {...snapshot.data(), id: snapshot.id};
+      ticket.created = ticket.created.toDate();
+      ticket.updated = ticket.updated.toDate();
+      ticket.messages.forEach(message => {
          message.dateTime = message.dateTime.toDate();
       });
-      tickets.push({
-         ...temp, 
-         id: ticket.id,
-      }); 
-   });
-   resolve(tickets);
+      resolve(ticket);
    })
-   return ticketsPromise
+   return ticketPromise
 } 
 
+export function getOpenedTicket(db, id) {
+   return doc(db, 'tickets', id)
+}
 export function addTicket(ticketCollection, ticket) {
    addDoc(ticketCollection, ticket)
 }

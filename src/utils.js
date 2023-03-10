@@ -12,6 +12,14 @@ export function generateId() {
    }
    return id
 }
+export function getDocValues() {
+   return [
+      document.getElementById('head').offsetHeight, 
+      document.getElementById('root').offsetHeight, 
+      document.getElementById('root').offsetWidth, 
+      window.scrollY
+   ]
+}
 export function parseMonth(month) {
    switch(month) {
       case 0: return 'Jan'

@@ -3,7 +3,7 @@ import { AppBar, Box } from "@mui/material";
 import { Ticketing } from "./components/ticketing";
 import { Head } from "./components/head";
 import { Auth } from "./components/auth"
-import { firestoreInit } from "./components/firebase/firebase";
+import { firestoreInit } from "./components/firebase";
 
 
 const fs = firestoreInit();
