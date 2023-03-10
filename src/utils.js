@@ -20,6 +20,17 @@ export function getDocValues() {
       window.scrollY
    ]
 }
+export function modTicket(ticket, authenticated, messageContent) {
+   let date = new Date();
+   ticket.updated = date;
+   ticket.messages.push({
+      id: generateId(),
+      author: authenticated, 
+      content: messageContent, 
+      dateTime: date
+   });
+   return ticket
+}
 export function parseMonth(month) {
    switch(month) {
       case 0: return 'Jan'
