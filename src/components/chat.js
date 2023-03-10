@@ -32,7 +32,7 @@ export function Chat({ ticket }) {
    const authenticated = useContext(AuthContext);
    useEffect(() => {
       document.getElementById(ticket.messages[ticket.messages.length-1].id).scrollIntoView();
-   }, [])
+   }, [ticket])
 
    return (ticket.messages.map(message => {
       return authenticated === message.author

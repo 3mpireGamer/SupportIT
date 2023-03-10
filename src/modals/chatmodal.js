@@ -9,7 +9,7 @@ import { generateId } from '../components/utils';
 import { updateTicket, getLiveTickets } from '../components/firebase/firebase';
 import { onSnapshot } from 'firebase/firestore';
 
-
+// refactor/optimize chat implementation to fetch single document
 export function ChatModal({ openedTicket, openTicket}) {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
