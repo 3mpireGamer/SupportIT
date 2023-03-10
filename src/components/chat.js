@@ -2,7 +2,6 @@ import React, { useCallback, useContext, useEffect, useRef, useState } from 'rea
 import { modTicket, parseMonth } from '../utils';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
-import SendIcon from '@mui/icons-material/Send';
 import { Box, Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { AuthContext, FirestoreContext } from '../app';
 import { updateTicket, getLiveUpdate, getOpenedTicket } from '../components/firebase';
@@ -45,22 +44,20 @@ export function Chat({ openedTicket, openTicket, refresh, toggleRefresh }) {
    }, [openTicket, fs.db, authenticated, refresh, toggleRefresh])
    
    if (selectedTicket.messages) { return (
-      <Grid container width='440px' spacing={3} padding={2} justifyContent="center" alignItems="center">
+      <Stack direction="column" justifyContent="flex-end" alignItems="center" spacing={2} width='400px'>
          <MessagingHead confirm={confirm} setConfirm={setConfirm} closeTicket={closeTicket} selectedTicket={selectedTicket} />
-         <Grid item xs={12} height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
-            <Messages ticket={selectedTicket} />
-         </Grid>
+         <Messages ticket={selectedTicket} />
          <MessageBox handleNewMessage={handleNewMessage} selectedTicket={selectedTicket} />
-      </Grid> 
+      </Stack> 
    )}
    return <></>
 }
 function MessagingHead({ confirm, setConfirm, closeTicket, selectedTicket }) {
-   return (<Grid item xs={12}><Grid container justifyContent='center'>
-   <Grid item xs={2}><ChatBubbleOutlineIcon fontSize='large' /></Grid>
-   <Grid item xs={10}><Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
+   return (<Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1} width='100%'>
+   <ChatBubbleOutlineIcon fontSize='large' />
+   <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
       <TicketCloser confirm={confirm} setConfirm={setConfirm} closeTicket={closeTicket} selectedTicket={selectedTicket} />
-   </Stack></Grid></Grid></Grid>
+   </Stack></Stack>
 )}
 function TicketCloser({ confirm, setConfirm, closeTicket, selectedTicket }) {
    return confirm ? <>
@@ -75,19 +72,21 @@ function Messages({ ticket }) {
       if(latestMessage.current) {latestMessage.current.scrollIntoView()}
    }, [ticket])
 
-   return (<Stack spacing={2}>{ticket.messages.map(message => {
+   return (
+   <Stack spacing={2} height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
+   {ticket.messages.map(message => {
       return authenticated === message.author ? (
-         <Grid ref={latestMessage} key={message.id} container>
-         <Grid item xs={2} /><Grid item xs={10}>
-            <Message head={formatDate(message.dateTime) + ' | ' + message.author} content={message.content} align={'right'} />
-         </Grid></Grid>
+      <Grid ref={latestMessage} key={message.id} container>
+      <Grid item xs={2} /><Grid item xs={10}>
+         <Message head={formatDate(message.dateTime) + ' | ' + message.author} content={message.content} align={'right'} />
+      </Grid></Grid>
       ) : (
-         <Grid ref={latestMessage} key={message.id} container>
-         <Grid item xs={10}>
-            <Message head={message.author + ' | ' + formatDate(message.dateTime)} content={message.content} align={'left'} />
-         </Grid><Grid item xs={2} />
-         </Grid>
-      )})}</Stack>
+      <Grid ref={latestMessage} key={message.id} container>
+      <Grid item xs={10}>
+         <Message head={message.author + ' | ' + formatDate(message.dateTime)} content={message.content} align={'left'} />
+      </Grid><Grid item xs={2} />
+      </Grid>
+   )})}</Stack>
 )}
 function Message({ head, content, align }) {
    return (
@@ -97,14 +96,14 @@ function Message({ head, content, align }) {
    </Box>
 )}
 function MessageBox({ handleNewMessage, selectedTicket }) {
-   return (<>
-   <Grid item xs={10}>
-      <TextField fullWidth sx={{backgroundColor: 'secondary.main', borderRadius: '4px'}} 
-         onKeyDown={(e) => {if (e.key === 'Enter') {handleNewMessage(selectedTicket, e)}}}
-         id='content' variant='outlined' label='Send Message' multiline maxRows={3} minRows={3} />
-   </Grid><Grid item xs={2}>
-      <IconButton color='primary' onClick={() => {handleNewMessage(selectedTicket)}}><SendIcon fontSize='large'/></IconButton>
-   </Grid></>
+   const [label, setLabel] = useState('Send Message');
+   return (
+   <TextField id='content' variant='outlined' label={label}
+      fullWidth multiline maxRows={3} minRows={3}
+      sx={{backgroundColor: 'secondary.main', borderRadius: '4px'}} 
+      onKeyDown={(e) => {if (e.key === 'Enter') {handleNewMessage(selectedTicket, e)}}}
+      onFocus={() => {setLabel('Press Enter to Send Message')}} onBlur={() => {setLabel('Send Message')}}
+   />
 )}
 
 function formatDate(date) {
