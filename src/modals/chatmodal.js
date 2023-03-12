@@ -3,7 +3,7 @@ import { Box, ClickAwayListener, Popper } from '@mui/material';
 import { ChatBox } from '../components/chatbox'
 import { getDocValues } from '../utils';
 
-const modalHeight = 195;
+const modalHeight = 124;
 const chatHeight = 400;
 export function getChatHeight() {return chatHeight};
 
@@ -58,7 +58,7 @@ export function ChatModal({ openedTicket, openTicket, refresh, toggleRefresh }) 
    return (
    <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '4px'}}>
       <ClickAwayListener onClickAway={() => {openTicket('')}}>
-      <Box padding={2} sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px', backgroundColor: 'secondary.dark'}}>
+      <Box padding={1} sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px', backgroundColor: 'secondary.dark'}}>
          <ChatBox openedTicket={openedTicket} openTicket={openTicket} refresh={refresh} toggleRefresh={toggleRefresh} />
       </Box></ClickAwayListener>
    </Popper>
