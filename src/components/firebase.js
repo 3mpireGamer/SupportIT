@@ -13,10 +13,12 @@ export function firestoreInit() {
    
    initializeApp(firebaseConfig);
    let db = getFirestore();
-   let ticketCollection = collection(db, 'tickets')
+   let ticketCollection = collection(db, 'tickets');
+   let userCollection = collection(db, 'users');
    return {
       db,
       collection: ticketCollection, 
+      users: userCollection, 
       query: query(ticketCollection, where('updated', 'not-in', ['']), orderBy('updated', 'desc'))
    }
 }

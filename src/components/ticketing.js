@@ -14,7 +14,7 @@ export function Ticketing({ refresh, toggleRefresh }) {
    const fs = useContext(FirestoreContext);
    const [tickets, setTickets] = useState([]);
    const [openedTicket, openTicket] = useState('');
-   const [view, setView] = useState(authenticated);
+   const [view, setView] = useState(authenticated.username);
    const [page, setPage] = useState({
       count: Math.ceil(tickets.length/pageSize), 
       start: 0, 
@@ -34,7 +34,7 @@ export function Ticketing({ refresh, toggleRefresh }) {
    <Grid container id='ticketing' direction='column' alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
       <Grid item><Tabs value={view} onChange={(_, view) => {setView(view)}}>
          <Tab value={false} label='View All Cases' />
-         <Tab value={authenticated} label='View My Cases' />
+         <Tab value={authenticated.username} label='View My Cases' />
          <Tab value={'Closed'} label='View Closed Cases' />
          <Tab onClick={() => {toggleRefresh(!refresh); setView(view)}} label={<SyncIcon />} />
       </Tabs></Grid>

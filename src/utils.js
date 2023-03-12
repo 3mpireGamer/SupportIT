@@ -20,16 +20,20 @@ export function getDocValues() {
       window.scrollY
    ]
 }
-export function modTicket(ticket, authenticated, messageContent) {
+export function modTicket(ticket, username, messageContent) {
    let date = new Date();
    ticket.updated = date;
    ticket.messages.push({
       id: generateId(),
-      author: authenticated, 
+      author: username, 
       content: messageContent, 
       dateTime: date
    });
    return ticket
+}
+export function canModTicket(authenticated, ticket) {
+   let userHasPermission = (authenticated.isAdmin || authenticated.username === ticket.author)
+   return (ticket.status !== 'Closed') ? userHasPermission : false
 }
 export function parseMonth(month) {
    switch(month) {

@@ -1,12 +1,21 @@
-import React, { useState } from "react"
+import React, { useContext, useEffect, useState } from "react"
 import { Button, Grid, TextField, Typography } from '@mui/material';
+import { FirestoreContext } from "../app";
+import { onSnapshot } from "firebase/firestore";
 
-const users = [
-   {username: 'admin', password: 'p@ssw0rd'},
-   {username: 'user', password: 'password'},
-];
 
 export function Auth({ authenticate }) {
+   const fs = useContext(FirestoreContext);
+   const [users, updateUsers] = useState();
+   useEffect(() => {
+      onSnapshot(fs.users, (snapshot) => {
+         let users = [];
+         snapshot.docs.forEach(user => {
+            users.push({...user.data()});
+         });
+         updateUsers(users);
+      })
+   }, [])   
    const [username, setUsername] = useState();
    const [password, setPassword] = useState();
    const [authError, throwError] = useState(false);
@@ -37,15 +46,11 @@ export function Auth({ authenticate }) {
    const checkAuth = () => {
       let authError = 'Invalid username or password!';
       users.forEach(user => {
-         if (username.toLowerCase() === user.username && password === user.password) {
-            authenticate(username.charAt(0).toUpperCase() + username.slice(1).toLowerCase());
+         if (username.toLowerCase() === user.username.toLowerCase() && password === user.password) {
+            authenticate(user);
             authError = false;
          } 
       });
-      if (username.match(/^[0-9a-zA-Z]+$/) && password === '1234') {
-         authenticate(username.charAt(0).toUpperCase() + username.slice(1).toLowerCase());
-         authError = false;
-      }
       throwError(authError);
    }
 

@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Box, ClickAwayListener, Popper } from '@mui/material';
-import { Chat } from '../components/chat'
+import { ChatBox } from '../components/chatbox'
 import { getDocValues } from '../utils';
 
 const modalHeight = 34;
@@ -59,7 +59,7 @@ export function ChatModal({ openedTicket, openTicket, refresh, toggleRefresh }) 
    <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '8px', backgroundColor: 'white'}}>
       <ClickAwayListener onClickAway={() => {openTicket('')}}>
       <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '8px', padding: '8px'}}>
-         <Chat openedTicket={openedTicket} openTicket={openTicket} refresh={refresh} toggleRefresh={toggleRefresh} />
+         <ChatBox openedTicket={openedTicket} openTicket={openTicket} refresh={refresh} toggleRefresh={toggleRefresh} />
       </Box></ClickAwayListener>
    </Popper>
 )}
