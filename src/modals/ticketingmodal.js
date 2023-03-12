@@ -9,9 +9,9 @@ const ticketTemplate = {
    status: 'Open', 
    category: '',
    desc: '', 
-   caseno: 0, 
-   created: '1 Jan 2023',
-   updated: '2 Jan 2023',
+   caseno: '', 
+   created: '',
+   updated: '',
    messages: [{}]
 } 
 let ticket = {...ticketTemplate}

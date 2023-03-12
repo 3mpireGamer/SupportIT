@@ -32,8 +32,7 @@ export function modTicket(ticket, username, messageContent) {
    return ticket
 }
 export function canModTicket(authenticated, ticket) {
-   let userHasPermission = (authenticated.isAdmin || authenticated.username === ticket.author)
-   return (ticket.status !== 'Closed') ? userHasPermission : false
+   return ((authenticated.isAdmin || authenticated.username === ticket.author) && ticket.status !== 'Closed')
 }
 export function parseMonth(month) {
    switch(month) {
