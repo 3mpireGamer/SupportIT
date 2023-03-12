@@ -21,8 +21,8 @@ const theme = createTheme({
     },
     secondary: {
       light: blueGrey['A100'], 
-      main: blueGrey['A200'], 
-      dark: blueGrey['A400'],
+      main: blueGrey[100], 
+      dark: blueGrey[200],
     }, 
     error: {
       light: deepOrange[500], 

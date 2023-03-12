@@ -7,11 +7,11 @@ import { Stack } from '@mui/system';
 import { getChatHeight } from '../modals/chatmodal';
 import { AuthContext } from '../app';
 
-export function MessagingHead({ status, confirm, setConfirm, closeTicket, selectedTicket }) {
+export function MessagingHead({ confirm, setConfirm, closeTicket, selectedTicket }) {
    const authenticated = useContext(AuthContext);
-   console.log(canModTicket(authenticated, selectedTicket))
    return (
-   <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1} width='100%'>
+   <Stack direction="row" justifyContent="space-between" alignItems="center" spacing={1} width='100%' backgroundColor='secondary.main' padding={1}
+   sx={{borderTopLeftRadius: '4px', borderTopRightRadius: '4px'}}>
       <ChatBubbleOutlineIcon fontSize='large' />
       <Stack direction="row" justifyContent="flex-end" alignItems="center" spacing={1}>
          {canModTicket(authenticated, selectedTicket) ? 
@@ -33,7 +33,7 @@ export function Messages({ ticket }) {
    }, [ticket])
 
    return (
-   <Stack spacing={2} height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
+   <Stack spacing={2} width='100%' height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
    {ticket.messages.map(message => {
       return authenticated.username === message.author ? (
       <Grid ref={latestMessage} key={message.id} container>
@@ -55,16 +55,17 @@ function Message({ head, content, align }) {
       <Typography textAlign={align}>{content}</Typography>
    </Box>
 )}
-export function MessageBox({ status, handleNewMessage, selectedTicket }) {
-   const authenticated = useContext(AuthContext);
+export function MessageBox({ handleNewMessage, selectedTicket }) {
    const [label, setLabel] = useState('Send Message');
-   return selectedTicket.status !== 'Closed' ? (
-   <TextField id='content' variant='outlined' label={label}
-      fullWidth multiline maxRows={3} minRows={3}
-      sx={{backgroundColor: 'secondary.main', borderRadius: '4px'}} 
-      onKeyDown={(e) => {if (e.key === 'Enter') {handleNewMessage(selectedTicket, e)}}}
-      onFocus={() => {setLabel('Press Enter to Send Message')}} onBlur={() => {setLabel('Send Message')}}
-   /> ) : <Typography>This Ticket is Closed</Typography>
+   return <Box padding={1} width='100%' backgroundColor='secondary.main'> {
+      selectedTicket.status !== 'Closed' ? (
+      <TextField id='content' variant='outlined' label={label}
+         fullWidth multiline maxRows={3} minRows={3}
+         sx={{backgroundColor: 'white', borderRadius: '4px'}} 
+         onKeyDown={(e) => {if (e.key === 'Enter') {handleNewMessage(selectedTicket, e)}}}
+         onFocus={() => {setLabel('Press Enter to Send Message')}} onBlur={() => {setLabel('Send Message')}}
+      /> ) : <Typography fullWidth textAlign='center' variant='h6'>This Ticket is Closed</Typography>
+   } </Box>
 }
 
 function formatDate(date) {

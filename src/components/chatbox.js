@@ -41,7 +41,7 @@ export function ChatBox({ openedTicket, openTicket, refresh, toggleRefresh }) {
    }, [openTicket, fs.db, authenticated, refresh, toggleRefresh])
    
    if (selectedTicket.messages) { return (
-      <Stack direction="column" justifyContent="flex-end" alignItems="center" spacing={2} width='400px'>
+      <Stack direction="column" justifyContent="flex-end" alignItems="center" width='400px' backgroundColor='white'>
          <MessagingHead confirm={confirm} setConfirm={setConfirm} closeTicket={closeTicket} selectedTicket={selectedTicket} />
          <Messages ticket={selectedTicket} />
          <MessageBox handleNewMessage={handleNewMessage} selectedTicket={selectedTicket} />
