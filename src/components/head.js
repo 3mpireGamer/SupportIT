@@ -28,7 +28,10 @@ export function Head({ authenticate, refresh, toggleRefresh }) {
 
 return (
    <Grid container spacing={2} pt={1} justifyContent='space-around'>
-      <Grid item xs={2} textAlign='right'><IconButton color='black'><DarkModeIcon fontSize='large' /></IconButton></Grid>
+      <Grid item xs={2} textAlign='right'>
+         {true ? <IconButton color='black'><DarkModeIcon fontSize='large' /></IconButton>
+         : <IconButton color='white'><LightModeIcon fontSize='large' /></IconButton>}
+      </Grid>
       <Grid item xs={8} textAlign='center'><Typography variant='h3'>SupportIT - Help Desk</Typography></Grid>
       <Grid item xs={2} textAlign='left'><Typography variant='h5'>{authenticated ? 'Hello, ' : ''}{authenticated.username}</Typography></Grid>
       <Grid item xs={2} />

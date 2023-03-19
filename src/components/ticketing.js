@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, Pagination, Tab, Tabs, Typography } from '@mui/material';
+import { Grid, Pagination, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
 import SyncIcon from '@mui/icons-material/Sync';
 import { AuthContext, FirestoreContext } from '../app';
 import { getTickets } from './firebase';
@@ -31,21 +31,21 @@ export function Ticketing({ refresh, toggleRefresh }) {
 
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return ( 
-   <Grid container id='ticketing' direction='column' alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
-      <Grid item><Tabs value={view} onChange={(_, view) => {setView(view)}}>
+   <Stack alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
+      <Tabs value={view} onChange={(_, view) => {setView(view)}}>
          <Tab value={false} label='View All Cases' />
          <Tab value={authenticated.username} label='View My Cases' />
          <Tab value={'Closed'} label='View Closed Cases' />
          <Tab onClick={() => {toggleRefresh(!refresh); setView(view)}} label={<SyncIcon />} />
-      </Tabs></Grid>
+      </Tabs>
       <TicketList tickets={tickets.slice(page.start, page.end)} openTicket={openTicket}/>
-      <Grid item xs={12}><Pagination count={page.count} onChange={(_, pageNum) => {
+      <Pagination count={page.count} onChange={(_, pageNum) => {
          let start = (pageNum - 1) * pageSize;
          let end = (pageNum - 1) * pageSize + pageSize;
          setPage({...page, start, end})
-      }} /></Grid>
+      }} />
       <ChatModal openedTicket={openedTicket} openTicket={openTicket} refresh={refresh} toggleRefresh={toggleRefresh} />
-   </Grid>
+   </Stack>
    )
 }
 
@@ -70,7 +70,7 @@ const TicketList = ({ tickets, openTicket }) => {
          <Typography>{formatDate(ticket.updated)}</Typography></Grid>
       </Grid>
    )});
-   return (<Grid item xs={12}>{ticketsList}</Grid>)
+   return ticketsList
 }
 
 function formatDate(date) {

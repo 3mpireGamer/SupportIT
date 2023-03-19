@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react"
-import { Button, Grid, TextField, Typography } from '@mui/material';
+import { Button, Stack, TextField, Typography } from '@mui/material';
 import { FirestoreContext } from "../app";
 import { onSnapshot } from "firebase/firestore";
 
@@ -15,10 +15,10 @@ export function Auth({ authenticate }) {
          });
          updateUsers(users);
       })
-   }, [])   
+   }, [fs.users]);
    const [username, setUsername] = useState();
    const [password, setPassword] = useState();
-   const [authError, throwError] = useState(false);
+   const [authError, throwError] = useState('');
 
    const enterPressed = (id) => {
       switch (id) {
@@ -48,21 +48,21 @@ export function Auth({ authenticate }) {
       users.forEach(user => {
          if (username.toLowerCase() === user.username.toLowerCase() && password === user.password) {
             authenticate(user);
-            authError = false;
+            authError = '';
          } 
       });
       throwError(authError);
    }
 
    return(
-   <Grid container id='auth' direction='column' spacing={2} alignContent='center' mt={2}>
-      {authError ? <Grid item xs={12}><Typography color='error' variant='body1' component='div' textAlign='center'>{authError}</Typography></Grid> : null}
-      <Grid item xs={12}><TextField fullWidth id='username' variant='outlined' label='Username' onChange={onChange}
-      onKeyDown={(e) => {if (e.key === 'Enter') {enterPressed(e.target.id)}}}></TextField></Grid>
-      <Grid item xs={12}><TextField fullWidth id='password' variant='outlined' label='Password' type='password' onChange={onChange}
-      onKeyDown={(e) => {if (e.key === 'Enter') {enterPressed(e.target.id)}}}></TextField></Grid>
-      {(username) ? <Grid item xs={12}><Button fullWidth onClick={checkAuth} variant='contained'>Login</Button></Grid>
-      : <Grid item xs={12}><Button fullWidth disabled variant='contained'>Login</Button></Grid>}
-   </Grid>
+   <Stack alignItems='center'><Stack spacing={2} p={2} justifyContent='flex-start' maxWidth='400px'>
+      {authError ? <Typography color='error' variant='body1' component='div' textAlign='center'>{authError}</Typography> : <></>}
+      <TextField id='username' variant='outlined' label='Username' onChange={onChange}
+         onKeyDown={(e) => {if (e.key === 'Enter') {enterPressed(e.target.id)}}} />
+      <TextField id='password' variant='outlined' label='Password' type='password' onChange={onChange}
+         onKeyDown={(e) => {if (e.key === 'Enter') {enterPressed(e.target.id)}}} />
+      {username ? <Button onClick={checkAuth} variant='contained'>Login</Button>
+      : <Button disabled variant='contained'>Login</Button>}
+   </Stack></Stack>
    )
 }
