@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Grid, Pagination, Paper, Stack, Tab, Tabs, Typography } from '@mui/material';
+import { Avatar, Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Pagination, Stack, Tab, Tabs, Typography } from '@mui/material';
 import SyncIcon from '@mui/icons-material/Sync';
 import { AuthContext, FirestoreContext } from '../app';
 import { getTickets } from './firebase';
@@ -20,13 +20,14 @@ export function Ticketing({ refresh, toggleRefresh }) {
       start: 0, 
       end: pageSize
    });
-   useEffect(() => {
-      setPage(p => {return {...p, count: Math.ceil(tickets.length/pageSize)}});
-   }, [tickets]);
    
    useEffect(() => {
-      getTickets(fs.query, view).then(result => {setTickets(result)});
-   }, [fs.query, view, authenticated, refresh]);
+      console.log(refresh)
+      getTickets(fs.query, view).then(result => {
+         setPage(p => {return {...p, end: pageSize, count: Math.ceil(result.length/pageSize)}});
+         setTickets(result.slice(page.start, page.end));
+      });
+   }, [fs.query, view, authenticated, refresh, page.start, page.end]);
    
 
    //Need Grid with Mutiple breakpoints for window resizing and small displays
@@ -38,7 +39,7 @@ export function Ticketing({ refresh, toggleRefresh }) {
          <Tab value={'Closed'} label='View Closed Cases' />
          <Tab onClick={() => {toggleRefresh(!refresh); setView(view)}} label={<SyncIcon />} />
       </Tabs>
-      <TicketList tickets={tickets.slice(page.start, page.end)} openTicket={openTicket}/>
+      <TicketList tickets={tickets} openTicket={openTicket}/>
       <Pagination count={page.count} onChange={(_, pageNum) => {
          let start = (pageNum - 1) * pageSize;
          let end = (pageNum - 1) * pageSize + pageSize;
@@ -50,25 +51,33 @@ export function Ticketing({ refresh, toggleRefresh }) {
 }
 
 const TicketList = ({ tickets, openTicket }) => {
+   const [expandedTicket, expandTicket] = useState('')
+   
    const ticketsList = tickets.map(ticket => {
       return (
-      <Grid container key={ticket.id} direction='row' maxWidth='960px'
-      onClick={() => {openTicket(ticket.id)}}>
-         <Grid item sx={{textAlign: 'left'}} xs={3}>
-         <Typography>Case Number: {ticket.caseno}</Typography></Grid>
-         <Grid item sx={{textAlign: 'left'}} xs={3}>
-         <Typography>{ticket.author} | {ticket.title}</Typography></Grid>
-         <Grid item sx={{textAlign: 'right'}} xs={3}>
-         <Typography>Status: {ticket.status}</Typography></Grid>
-         <Grid item sx={{textAlign: 'right'}} xs={3}>
-         <Typography>Updated</Typography></Grid>
-         <Grid item sx={{textAlign: 'left'}} xs={3}>
-         <Typography>Description</Typography></Grid>
-         <Grid item sx={{textAlign: 'left'}} xs={6}>
-         <Typography noWrap>{ticket.desc}</Typography></Grid>
-         <Grid item sx={{textAlign: 'right'}} xs={3}>
-         <Typography>{formatDate(ticket.updated)}</Typography></Grid>
-      </Grid>
+      <Card key={ticket.id} elevation={5} sx={{width: '400px'}}>
+         <CardActionArea onClick={() => {openTicket(ticket.id)}}>
+            <CardHeader 
+               avatar={<Avatar>{ticket.author.charAt(0)}</Avatar>}
+               title={ticket.title} 
+               subheader={
+                  ticket.caseno + ' last updated ' + formatDate(ticket.updated)
+               }
+            />
+         </CardActionArea>
+         <Collapse in={expandedTicket===ticket.id} timeout='auto' unmountOnExit>
+            <CardContent>
+               <Typography variant='body1'>{ticket.author} created this ticket on {formatDate(ticket.created)}.</Typography>
+               <Typography variant='body2'>{ticket.desc}</Typography>
+            </CardContent>
+         </Collapse>
+         <CardActions>
+            <Stack direction='row' pl={7} pr={2} justifyContent='space-between' width='100%'>
+            <Button onClick={() => (expandTicket(expandedTicket ? '' : ticket.id))}>Show {expandedTicket===ticket.id ? 'less' : 'more'}...</Button>
+            <Button onClick={() => {openTicket(ticket.id)}}>View ticket</Button>
+            </Stack>
+         </CardActions>
+      </Card>
    )});
    return ticketsList
 }
