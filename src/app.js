@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { AppBar, Box } from "@mui/material";
+import { AppBar } from "@mui/material";
 import { Ticketing } from "./components/ticketing";
 import { Head } from "./components/head";
 import { Auth } from "./components/auth"
@@ -15,10 +15,8 @@ export function App () {
    const [refresh, toggleRefresh] = useState(false);
 
    return (
-   <Box sx={{alignContent: 'center', height: '100%'}}>
    <AuthContext.Provider value={authenticated}><FirestoreContext.Provider value={fs}>
-      <AppBar id='head' color='secondary' position='static'><Head authenticate={authenticate} refresh={refresh} toggleRefresh={toggleRefresh} /></AppBar>
+      <AppBar id='head' color='default' position='static'><Head authenticate={authenticate} refresh={refresh} toggleRefresh={toggleRefresh} /></AppBar>
       {authenticated ? <Ticketing refresh={refresh} toggleRefresh={toggleRefresh} /> : <Auth authenticate={authenticate} />}
-      </FirestoreContext.Provider></AuthContext.Provider>
-   </Box>
+   </FirestoreContext.Provider></AuthContext.Provider>
 )}

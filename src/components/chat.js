@@ -1,11 +1,13 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { canModTicket, parseMonth } from '../utils';
+import { canDeleteMessage, canModTicket, modTicket, parseMonth } from '../utils';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
+import DeleteIcon from '@mui/icons-material/Delete';
 import { Box, Button, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { getChatHeight } from '../modals/chatmodal';
-import { AuthContext } from '../app';
+import { AuthContext, FirestoreContext } from '../app';
+import { updateTicket } from './firebase';
 
 export function MessagingHead({ confirm, setConfirm, closeTicket, selectedTicket }) {
    const authenticated = useContext(AuthContext);
@@ -27,24 +29,43 @@ function TicketCloser({ confirm, setConfirm, closeTicket, selectedTicket }) {
 }
 export function Messages({ ticket }) {
    const authenticated = useContext(AuthContext);
+   const fs = useContext(FirestoreContext);
    const latestMessage = useRef();
    useEffect(() => {
       if(latestMessage.current) {latestMessage.current.scrollIntoView()}
    }, [ticket])
+   
+   const [confirmMessage, setConfirm] = useState('');
+   const deleteMessage = (ticket, confirmMessage) => {
+      setConfirm('');
+      ticket.updated = new Date();
+      ticket.messages = ticket.messages.filter((message) => {
+         return message.id !== confirmMessage
+      });
+      updateTicket(fs.db, ticket);
+   }
 
    return (
    <Stack spacing={2} width='100%' height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
    {ticket.messages.map(message => {
       return authenticated.username === message.author ? (
       <Grid ref={latestMessage} key={message.id} container>
-      <Grid item xs={2} /><Grid item xs={10}>
+      <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket))  
+      ? <IconButton onClick={() => {deleteMessage(ticket, confirmMessage)}} color='error'><DeleteIcon /></IconButton>
+      : <></>
+      }</Grid>
+      <Grid item xs={10} onClick={() => setConfirm(message.id)}>
          <Message head={formatDate(message.dateTime) + ' | ' + message.author} content={message.content} align={'right'} />
       </Grid></Grid>
       ) : (
       <Grid ref={latestMessage} key={message.id} container>
-      <Grid item xs={10}>
+      <Grid item xs={10} onClick={() => setConfirm(message.id)}>
          <Message head={message.author + ' | ' + formatDate(message.dateTime)} content={message.content} align={'left'} />
-      </Grid><Grid item xs={2} />
+      </Grid>
+      <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket)) 
+      ? <IconButton onClick={() => {deleteMessage(ticket, confirmMessage)}} color='error'><DeleteIcon /></IconButton>
+      : <></>
+      }</Grid>
       </Grid>
    )})}</Stack>
 )}

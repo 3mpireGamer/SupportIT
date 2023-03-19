@@ -23,16 +23,19 @@ export function getDocValues() {
 export function modTicket(ticket, username, messageContent) {
    let date = new Date();
    ticket.updated = date;
-   ticket.messages.push({
+   if(messageContent) {ticket.messages.push({
       id: generateId(),
       author: username, 
       content: messageContent, 
       dateTime: date
-   });
+   })}
    return ticket
 }
 export function canModTicket(authenticated, ticket) {
    return ((authenticated.isAdmin || authenticated.username === ticket.author) && ticket.status !== 'Closed')
+}
+export function canDeleteMessage(authenticated, ticket) {
+   return authenticated.isAdmin && ticket.status !== 'Closed'
 }
 export function parseMonth(month) {
    switch(month) {
