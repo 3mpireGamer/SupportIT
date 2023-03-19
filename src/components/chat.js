@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useRef, useState } from 'react'
-import { canDeleteMessage, canModTicket, modTicket, parseMonth } from '../utils';
+import { canDeleteMessage, canModTicket, parseMonth } from '../utils';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -46,7 +46,7 @@ export function Messages({ ticket }) {
    }
 
    return (
-   <Stack spacing={2} width='100%' height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}}>
+   <Stack spacing={2} width='100%' height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}} p={1}>
    {ticket.messages.map(message => {
       return authenticated.username === message.author ? (
       <Grid ref={latestMessage} key={message.id} container>

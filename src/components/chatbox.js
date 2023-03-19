@@ -23,8 +23,8 @@ export function ChatBox({ openedTicket, openTicket, refresh, toggleRefresh }) {
    }, [fs, openedTicket]);
 
 
-   const handleNewMessage = useCallback((ticket, e=false) => {
-      let messageBox = e ? e.target : document.getElementById('content');
+   const handleNewMessage = useCallback((ticket, e) => {
+      let messageBox = e.target;
       messageBox.focus();
       let message = messageBox.value.replace(/(\r\n|\n|\r)/gm, "")
       if (message) {updateTicket(fs.db, modTicket(ticket, authenticated.username, message))}
@@ -41,7 +41,7 @@ export function ChatBox({ openedTicket, openTicket, refresh, toggleRefresh }) {
    }, [openTicket, fs.db, authenticated, refresh, toggleRefresh])
    
    if (selectedTicket.messages) { return (
-      <Stack direction="column" justifyContent="flex-end" alignItems="center" width='400px' backgroundColor='white'>
+      <Stack direction="column" justifyContent="flex-end" alignItems="center" width='400px' backgroundColor='common.white'>
          <MessagingHead confirm={confirm} setConfirm={setConfirm} closeTicket={closeTicket} selectedTicket={selectedTicket} />
          <Messages ticket={selectedTicket} />
          <MessageBox handleNewMessage={handleNewMessage} selectedTicket={selectedTicket} />

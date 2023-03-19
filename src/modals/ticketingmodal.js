@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Button, Box, ButtonGroup, Grid, InputLabel, NativeSelect, TextField, Popper, ClickAwayListener } from '@mui/material';
+import { Button, Box, ButtonGroup, InputLabel, NativeSelect, TextField, Popper, ClickAwayListener, Stack } from '@mui/material';
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 
@@ -10,8 +10,8 @@ const ticketTemplate = {
    category: '',
    desc: '', 
    caseno: '', 
-   created: '',
-   updated: '',
+   created: Date(),
+   updated: Date(),
    messages: [{}]
 } 
 let ticket = {...ticketTemplate}
@@ -40,40 +40,32 @@ export function TicketingModal({ newTicket }) {
       ticket = {...ticketTemplate}
       setShow(false);
    }
-   return (
-   <Grid container direction='column' alignContent='center' spacing={2}>
-      <Grid item xs={12}>
-         <Button variant='contained' color='primary'
-         onClick={() => {showModal()}}>Create Ticket</Button>
-      </Grid><Grid item id='modalAnchor'></Grid>
-      <Popper open={show} anchorEl={anchorEl} sx={{backgroundColor: 'secondary.light', borderRadius: '4px'}}>
-         <ClickAwayListener onClickAway={hideModal}>
-            <Grid container spacing={1} alignContent='center'>
-               <Grid item xs={12}><TicketForm onChange={onChange}/></Grid>
-               <Grid item xs={12}><FormButtons hideModal={hideModal} createTicket={createTicket} isFilled={isFilled}/></Grid>
-            </Grid>
-         </ClickAwayListener>
-      </Popper>
-   </Grid>
-);}
+   return (<>
+      <Button variant='contained' color='primary' onClick={() => {showModal()}}>Create Ticket</Button>
+      <Box id='modalAnchor' pt={1} />
+      <Popper open={show} anchorEl={anchorEl} sx={{backgroundColor: 'secondary.dark', borderRadius: '4px'}}><ClickAwayListener onClickAway={hideModal}>
+         <Stack p={1} spacing={1} alignItems='center' justifyContent='space-around' sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '8px', padding: '8px'}}>
+            <TicketForm onChange={onChange}/>
+            <FormButtons hideModal={hideModal} createTicket={createTicket} isFilled={isFilled}/>
+         </Stack>
+      </ClickAwayListener></Popper>
+</>)}
 
 const TicketForm = ({ onChange }) => {  
    return (
-   <Grid container spacing={1.5}>
-      <Grid item xs={12}><TextField fullWidth id='title' variant='outlined' label='Case Title' onChange={onChange}></TextField></Grid>
-      <Grid item xs={12}>
-         <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px', boxSizing: 'border-box'}}>
-            <InputLabel sx={{padding: '8px 8px 0 8px'}} variant='standard' htmlFor='category'>Category</InputLabel>
-            <NativeSelect sx={{padding: '0 8px 8px 8px'}} fullWidth id='category' defaultValue={'Select Category'} onChange={onChange}> 
-               <option hidden>Select Category</option>
-               <option>Development</option>
-               <option>Networking</option>
-               <option>Software</option>
-            </NativeSelect> 
-         </Box>
-      </Grid>
-      <Grid item xs={12}><TextField fullWidth id='desc' variant='outlined' label='Brief Description...' multiline onChange={onChange}></TextField></Grid>
-   </Grid>
+   <Stack spacing={1.5}>
+      <TextField fullWidth id='title' variant='outlined' label='Case Title' onChange={onChange} sx={{backgroundColor: 'secondary.light', borderRadius: '4px'}} />
+      <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px', boxSizing: 'border-box', backgroundColor: 'secondary.light'}}>
+         <InputLabel sx={{padding: '8px 8px 0 8px'}} variant='standard' htmlFor='category'>Category</InputLabel>
+         <NativeSelect sx={{padding: '0 8px 8px 8px'}} fullWidth id='category' defaultValue={'Select Category'} onChange={onChange}> 
+            <option hidden>Select Category</option>
+            <option>Development</option>
+            <option>Networking</option>
+            <option>Software</option>
+         </NativeSelect> 
+      </Box>
+      <TextField fullWidth id='desc' variant='outlined' label='Brief Description...' multiline onChange={onChange} sx={{backgroundColor: 'secondary.light', borderRadius: '4px'}} />
+   </Stack>
 )}
 
 const FormButtons = ({ hideModal, createTicket, isFilled }) => {

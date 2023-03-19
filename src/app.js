@@ -16,7 +16,7 @@ export function App () {
 
    return (
    <AuthContext.Provider value={authenticated}><FirestoreContext.Provider value={fs}>
-      <AppBar id='head' color='default' position='static'><Head authenticate={authenticate} refresh={refresh} toggleRefresh={toggleRefresh} /></AppBar>
+      <AppBar id='head' position='static'><Head authenticate={authenticate} refresh={refresh} toggleRefresh={toggleRefresh} /></AppBar>
       {authenticated ? <Ticketing refresh={refresh} toggleRefresh={toggleRefresh} /> : <Auth authenticate={authenticate} />}
    </FirestoreContext.Provider></AuthContext.Provider>
 )}
