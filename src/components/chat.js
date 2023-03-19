@@ -3,7 +3,7 @@ import { canDeleteMessage, canModTicket, parseMonth } from '../utils';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
 import DeleteIcon from '@mui/icons-material/Delete';
-import { Box, Button, Grid, IconButton, TextField, Typography } from '@mui/material';
+import { Box, Button, ClickAwayListener, Grid, IconButton, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { getChatHeight } from '../modals/chatmodal';
 import { AuthContext, FirestoreContext } from '../app';
@@ -47,27 +47,31 @@ export function Messages({ ticket }) {
 
    return (
    <Stack spacing={2} width='100%' height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}} p={1}>
-   {ticket.messages.map(message => {
-      return authenticated.username === message.author ? (
-      <Grid ref={latestMessage} key={message.id} container>
-      <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket))  
-      ? <IconButton onClick={() => {deleteMessage(ticket, confirmMessage)}} color='error'><DeleteIcon /></IconButton>
-      : <></>
-      }</Grid>
-      <Grid item xs={10} onClick={() => setConfirm(message.id)}>
-         <Message head={formatDate(message.dateTime) + ' | ' + message.author} content={message.content} align={'right'} />
-      </Grid></Grid>
-      ) : (
-      <Grid ref={latestMessage} key={message.id} container>
-      <Grid item xs={10} onClick={() => setConfirm(message.id)}>
-         <Message head={message.author + ' | ' + formatDate(message.dateTime)} content={message.content} align={'left'} />
-      </Grid>
-      <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket)) 
-      ? <IconButton onClick={() => {deleteMessage(ticket, confirmMessage)}} color='error'><DeleteIcon /></IconButton>
-      : <></>
-      }</Grid>
-      </Grid>
-   )})}</Stack>
+      {ticket.messages.map(message => {
+         return <Grid ref={latestMessage} key={message.id} container>
+         {(authenticated.username === message.author) ? (<>
+         <Grid ref={latestMessage} key={message.id} container>
+            <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket))  
+            ? <IconButton onClick={() => {deleteMessage(ticket, confirmMessage)}} color='error'><DeleteIcon /></IconButton> : <></>}
+            </Grid>
+            <ClickAwayListener onClickAway={() => {
+               if(confirmMessage === message.id) {setConfirm('')}
+            }}><Grid item xs={10} onClick={() => setConfirm(message.id)}>
+               <Message head={formatDate(message.dateTime) + ' | ' + message.author} content={message.content} align={'right'} />
+            </Grid></ClickAwayListener>
+         </Grid></>
+         ) : (<>
+            <ClickAwayListener onClickAway={() => {
+               if(confirmMessage === message.id) {setConfirm('')}
+            }}><Grid item xs={10} onClick={() => setConfirm(message.id)}>
+               <Message head={message.author + ' | ' + formatDate(message.dateTime)} content={message.content} align={'left'} />
+            </Grid></ClickAwayListener>
+            <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket)) 
+            ? <IconButton onClick={() => {deleteMessage(ticket, confirmMessage)}} color='error'><DeleteIcon /></IconButton> : <></>}
+            </Grid></>
+      )}</Grid>
+      })}
+   </Stack>
 )}
 function Message({ head, content, align }) {
    return (

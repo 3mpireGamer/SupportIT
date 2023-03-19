@@ -27,15 +27,15 @@ export function Head({ authenticate, refresh, toggleRefresh }) {
    }, [authenticated, fs.collection, refresh, toggleRefresh])
 
 return (
-   <Grid container spacing={2} pt={1} justifyContent='space-around'>
-      <Grid item xs={2} textAlign='right'>
+   <Grid container spacing={1} pt={1} pb={1} justifyContent='space-around'>
+      <Grid item xs={3} textAlign='right' mt={1}>
          {true ? <IconButton color='black'><DarkModeIcon fontSize='large' /></IconButton>
          : <IconButton color='white'><LightModeIcon fontSize='large' /></IconButton>}
       </Grid>
-      <Grid item xs={8} textAlign='center'><Typography variant='h3'>SupportIT - Help Desk</Typography></Grid>
-      <Grid item xs={2} textAlign='left'><Typography variant='h5'>{authenticated ? 'Hello, ' : ''}{authenticated.username}</Typography></Grid>
-      <Grid item xs={2} />
-      <Grid item xs={8} textAlign='center'>{authenticated ? <TicketingModal newTicket={newTicket} /> : <></>}</Grid>
-      <Grid item xs={2} textAlign='left'>{authenticated ? <Button variant='outlined' color='error' onClick={() => {authenticate('')}}>Logout</Button> : <></>}</Grid>
+      <Grid item xs={6} textAlign='center'><Typography variant='h3'>SupportIT - Help Desk</Typography></Grid>
+      <Grid item xs={3} textAlign='left' mt={3}><Typography variant='h5'>{authenticated ? 'Hello, ' : ''}{authenticated.username}</Typography></Grid>
+      <Grid item xs={3} />
+      <Grid item xs={6} textAlign='center'>{authenticated ? <TicketingModal newTicket={newTicket} /> : <></>}</Grid>
+      <Grid item xs={3} textAlign='left'>{authenticated ? <Button variant='outlined' color='error' onClick={() => {authenticate('')}}>Logout</Button> : <></>}</Grid>
    </Grid>
 )}

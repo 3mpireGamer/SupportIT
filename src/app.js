@@ -7,6 +7,7 @@ import { firestoreInit } from "./components/firebase";
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { getTheme } from "./utils";
+import { ScrollModal } from "./modals/scrollmodal";
 
 
 const fs = firestoreInit();
@@ -17,7 +18,6 @@ export function App () {
    const [authenticated, authenticate] = useState('');
    const [refresh, toggleRefresh] = useState(false);
    const [theme, setTheme] = useState(getTheme);
-
    // eslint-disable-next-line
    const setMode = useCallback((mode) => {
       //Set dark mode
@@ -30,6 +30,7 @@ export function App () {
       <AuthContext.Provider value={authenticated}><FirestoreContext.Provider value={fs}>
          <AppBar id='head' position='static'><Head authenticate={authenticate} refresh={refresh} toggleRefresh={toggleRefresh} /></AppBar>
          {authenticated ? <Ticketing refresh={refresh} toggleRefresh={toggleRefresh} /> : <Auth authenticate={authenticate} />}
+         <ScrollModal />
       </FirestoreContext.Provider></AuthContext.Provider>
    </ThemeProvider>
 )}

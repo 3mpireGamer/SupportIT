@@ -22,9 +22,8 @@ export function Ticketing({ refresh, toggleRefresh }) {
    });
    
    useEffect(() => {
-      console.log(refresh)
       getTickets(fs.query, view).then(result => {
-         setPage(p => {return {...p, end: pageSize, count: Math.ceil(result.length/pageSize)}});
+         setPage(p => {return {...p, count: Math.ceil(result.length/pageSize)}});
          setTickets(result.slice(page.start, page.end));
       });
    }, [fs.query, view, authenticated, refresh, page.start, page.end]);
@@ -55,7 +54,7 @@ const TicketList = ({ tickets, openTicket }) => {
    
    const ticketsList = tickets.map(ticket => {
       return (
-      <Card key={ticket.id} elevation={5} sx={{width: '400px'}}>
+      <Card key={ticket.id} elevation={5} sx={{width: '380px'}}>
          <CardActionArea onClick={() => {openTicket(ticket.id)}}>
             <CardHeader 
                avatar={<Avatar>{ticket.author.charAt(0)}</Avatar>}
