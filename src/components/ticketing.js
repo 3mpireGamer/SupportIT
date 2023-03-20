@@ -81,6 +81,25 @@ const TicketList = ({ tickets, openTicket }) => {
    return ticketsList
 }
 
+// Values in milliseconds
+const minute = 60000;
+const hour = 3600000;
+const day = 86400000;
+const week = 604800000;
 function formatDate(date) {
+   let timePassed = Date.now() - date.getTime();
+   if (timePassed < minute) return 'seconds ago'
+   if (timePassed < hour) {
+      let minutesPassed = Math.floor(timePassed/minute)
+      return minutesPassed + (minutesPassed === 1 ? ' min' : ' mins') + ' ago'
+   }
+   if (timePassed < day) {
+      let hoursPassed = Math.floor(timePassed/hour)
+      return hoursPassed + (hoursPassed === 1 ? ' hr' : ' hrs') + ' ago'
+   }
+   if (timePassed < week) {
+      let daysPassed = Math.floor(timePassed/day)
+      return daysPassed + (daysPassed === 1 ? ' day' : ' days') + ' ago'
+   }
    return parseMonth(date.getMonth()) + ' ' + date.getDate() + ' ' + date.getFullYear()
 }
