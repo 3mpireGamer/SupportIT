@@ -32,7 +32,7 @@ export function Messages({ ticket }) {
    const fs = useContext(FirestoreContext);
    const latestMessage = useRef();
    useEffect(() => {
-      if(latestMessage.current) {latestMessage.current.scrollIntoView()}
+      if(latestMessage.current) latestMessage.current.scrollIntoView({block: 'nearest'});
    }, [ticket])
    
    const [confirmMessage, setConfirm] = useState('');
