@@ -94,5 +94,5 @@ export function MessageBox({ handleNewMessage, selectedTicket }) {
 }
 
 function formatDate(date) {
-   return parseMonth(date.getMonth()) + ' ' + date.getDate() + ' - ' + date.getHours() + ':' + date.getMinutes()
+   return parseMonth(date.getMonth()) + ' ' + date.getDate() + ' - ' + date.getHours() + ':' + (date.getMinutes() < 10 ? '0' : '') + date.getMinutes()
 }

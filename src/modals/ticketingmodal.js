@@ -59,9 +59,13 @@ const TicketForm = ({ onChange }) => {
          <InputLabel sx={{padding: '8px 8px 0 8px'}} variant='standard' htmlFor='category'>Category</InputLabel>
          <NativeSelect sx={{padding: '0 8px 8px 8px'}} fullWidth id='category' defaultValue={'Select Category'} onChange={onChange}> 
             <option hidden>Select Category</option>
+            <option>Accounts</option>
             <option>Development</option>
+            <option>Hardware</option>
+            <option>Human Resources</option>
             <option>Networking</option>
             <option>Software</option>
+            <option>Other</option>
          </NativeSelect> 
       </Box>
       <TextField fullWidth id='desc' variant='outlined' label='Brief Description...' multiline onChange={onChange} sx={{backgroundColor: 'secondary.light', borderRadius: '4px'}} />
