@@ -66,7 +66,7 @@ const TicketList = ({ tickets, openTicket }) => {
          </CardActionArea>
          <Collapse in={expandedTicket===ticket.id} timeout='auto' unmountOnExit>
             <CardContent>
-               <Typography variant='body1'>{ticket.author} created this ticket on {formatDate(ticket.created)}.</Typography>
+               <Typography variant='body1'>{ticket.author} created this ticket on {formatDate(ticket.created, true)}.</Typography>
                <Typography variant='body2'>{ticket.desc}</Typography>
             </CardContent>
          </Collapse>
@@ -86,7 +86,9 @@ const minute = 60000;
 const hour = 3600000;
 const day = 86400000;
 const week = 604800000;
-function formatDate(date) {
+function formatDate(date, detailed=false) {
+   let detailedDate = parseMonth(date.getMonth()) + ' ' + date.getDate() + ' ' + date.getFullYear()
+   if (detailed) return detailedDate
    let timePassed = Date.now() - date.getTime();
    if (timePassed < minute) return 'seconds ago'
    if (timePassed < hour) {
@@ -101,5 +103,5 @@ function formatDate(date) {
       let daysPassed = Math.floor(timePassed/day)
       return daysPassed + (daysPassed === 1 ? ' day' : ' days') + ' ago'
    }
-   return parseMonth(date.getMonth()) + ' ' + date.getDate() + ' ' + date.getFullYear()
+   return detailedDate
 }
