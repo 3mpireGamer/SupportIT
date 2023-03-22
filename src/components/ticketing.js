@@ -35,7 +35,6 @@ export function Ticketing({ refresh, toggleRefresh }) {
       });
    }, [fs.query, view, authenticated, refresh, page.start, page.end, page.count]);
 
-   console.log(page)
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return ( 
    <Stack alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>

@@ -5,6 +5,7 @@ import { updateTicket, getLiveUpdate, getOpenedTicket } from './firebase';
 import { onSnapshot } from 'firebase/firestore';
 import { Stack } from '@mui/system';
 import { MessagingHead, Messages, MessageBox } from './chat'
+import { Typography } from '@mui/material';
 
 
 export function ChatBox({ openedTicket, openTicket, refresh, toggleRefresh }) {
@@ -13,14 +14,20 @@ export function ChatBox({ openedTicket, openTicket, refresh, toggleRefresh }) {
 
    const [confirm, setConfirm] = useState(false);
    const [selectedTicket, setTicket] = useState({});
+   const [error, setError] = useState(false);
    const unsubscribe = useRef(() => {});
    useEffect(() => {
       if (openedTicket) {
          unsubscribe.current = onSnapshot(getOpenedTicket(fs.db, openedTicket), (snapshot) => {
-            getLiveUpdate(snapshot).then(result => {setTicket(result)});
+            getLiveUpdate(snapshot)
+               .then(result => {
+                  setTicket(result);
+                  setError(false);
+               })
+               .catch(_ => setError(true))
       })} 
       return () => {unsubscribe.current()}
-   }, [fs, openedTicket]);
+   }, [fs, openedTicket, openTicket]);
 
 
    const handleNewMessage = useCallback((ticket, e) => {
@@ -40,12 +47,12 @@ export function ChatBox({ openedTicket, openTicket, refresh, toggleRefresh }) {
       updateTicket(fs.db, modTicket(ticket, authenticated.username, authenticated.username + ' closed this ticket. '));
    }, [openTicket, fs.db, authenticated, refresh, toggleRefresh])
    
-   if (selectedTicket.messages) { return (
-      <Stack direction="column" justifyContent="flex-end" alignItems="center" width='380px' backgroundColor='common.white'>
-         <MessagingHead confirm={confirm} setConfirm={setConfirm} closeTicket={closeTicket} selectedTicket={selectedTicket} />
-         <Messages ticket={selectedTicket} />
-         <MessageBox handleNewMessage={handleNewMessage} selectedTicket={selectedTicket} />
-      </Stack> 
-   )}
-   return <></>
-}
+   if (error) return <Typography color='error' textAlign='center' variant='h5'>Ticket Not Found<br />Refresh to Update Tickets</Typography>
+   if (!selectedTicket.messages) return <Typography textAlign='center' variant='h5'>Loading Ticket...</Typography>
+   return (
+   <Stack direction="column" justifyContent="flex-end" alignItems="center" width='380px' backgroundColor='common.white'>
+      <MessagingHead confirm={confirm} setConfirm={setConfirm} closeTicket={closeTicket} selectedTicket={selectedTicket} />
+      <Messages ticket={selectedTicket} />
+      <MessageBox handleNewMessage={handleNewMessage} selectedTicket={selectedTicket} />
+   </Stack> 
+)}

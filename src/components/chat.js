@@ -51,7 +51,7 @@ export function Messages({ ticket }) {
          return <Grid ref={latestMessage} key={message.id} container>
          {(authenticated.username === message.author) ? (<>
          <Grid ref={latestMessage} key={message.id} container>
-            <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket))  
+            <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket, message))  
             ? <IconButton onClick={() => {deleteMessage(ticket, confirmMessage)}} color='error'><DeleteIcon /></IconButton> : <></>}
             </Grid>
             <ClickAwayListener onClickAway={() => {
@@ -66,7 +66,7 @@ export function Messages({ ticket }) {
             }}><Grid item xs={10} onClick={() => setConfirm(message.id)}>
                <Message head={message.author + ' | ' + formatDate(message.dateTime)} content={message.content} align={'left'} />
             </Grid></ClickAwayListener>
-            <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket)) 
+            <Grid item xs={2} >{(confirmMessage === message.id && canDeleteMessage(authenticated, ticket, message)) 
             ? <IconButton onClick={() => {deleteMessage(ticket, confirmMessage)}} color='error'><DeleteIcon /></IconButton> : <></>}
             </Grid></>
       )}</Grid>
@@ -89,7 +89,7 @@ export function MessageBox({ handleNewMessage, selectedTicket }) {
          sx={{backgroundColor: 'white', borderRadius: '4px'}} 
          onKeyDown={(e) => {if (e.key === 'Enter') {handleNewMessage(selectedTicket, e)}}}
          onFocus={() => {setLabel('Press Enter to Send Message')}} onBlur={() => {setLabel('Send Message')}}
-      /> ) : <Typography fullWidth textAlign='center' variant='h6'>This Ticket is Closed</Typography>
+      /> ) : <Typography textAlign='center' variant='h6'>This Ticket is Closed</Typography>
    } </Box>
 }
 

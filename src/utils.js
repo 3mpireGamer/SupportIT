@@ -35,10 +35,20 @@ export function modTicket(ticket, username, messageContent) {
    return ticket
 }
 export function canModTicket(authenticated, ticket) {
-   return ((authenticated.isAdmin || authenticated.username === ticket.author) && ticket.status !== 'Closed')
+   return isAdminOrAuthor(authenticated, ticket.author) && !isClosed(ticket)
 }
-export function canDeleteMessage(authenticated, ticket) {
-   return authenticated.isAdmin && ticket.status !== 'Closed'
+export function canDeleteMessage(authenticated, ticket, message) {
+   return isRecentMessage(message) && isAdminOrAuthor(authenticated, message.author) && !isClosed(ticket)
+}
+const day = 86400000;
+function isRecentMessage(message) {
+   return Date.now() - message.dateTime.getTime() < day
+}
+function isAdminOrAuthor(authenticated, author) {
+   return authenticated.isAdmin || authenticated.username === author
+}
+function isClosed(ticket) {
+   return ticket.status === 'Closed'
 }
 export function parseMonth(month) {
    switch(month) {
