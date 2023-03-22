@@ -39,6 +39,7 @@ export function TicketingModal({ newTicket }) {
    const hideModal = () => {
       ticket = {...ticketTemplate}
       setShow(false);
+      setFilled(false);
    }
    return (<>
       <Button variant='contained' color='primary' onClick={() => {showModal()}}>Create Ticket</Button>

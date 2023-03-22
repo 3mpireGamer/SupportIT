@@ -27,7 +27,7 @@ function generateBoundingRect() {
    return ({boundingClientRect, placementBool})
 }
 
-export function ChatModal({ openedTicket, openTicket, refresh, toggleRefresh }) {
+export function ChatModal({ openedTicket, openTicket }) {
    const [virtualEl, setVirtualEl] = useState();
    const [placement, setPlacement] = useState();
    
@@ -59,7 +59,7 @@ export function ChatModal({ openedTicket, openTicket, refresh, toggleRefresh }) 
    <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '4px'}}>
       <ClickAwayListener onClickAway={() => {openTicket('')}}>
       <Box m={2} p={1} sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px', backgroundColor: 'secondary.dark'}}>
-         <ChatBox openedTicket={openedTicket} openTicket={openTicket} refresh={refresh} toggleRefresh={toggleRefresh} />
+         <ChatBox openedTicket={openedTicket} openTicket={openTicket} />
       </Box></ClickAwayListener>
    </Popper>
 )}

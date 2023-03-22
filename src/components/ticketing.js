@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Pagination, Stack, Tab, Tabs } from '@mui/material';
 import SyncIcon from '@mui/icons-material/Sync';
-import { AuthContext, FirestoreContext } from '../app';
+import { AuthContext, FirestoreContext, RefreshContext } from '../app';
 import { getTickets } from './firebase';
 import { ChatModal } from '../modals/chatmodal'
 import { Tickets } from './tickets';
@@ -9,7 +9,8 @@ import { Tickets } from './tickets';
 
 const pageSize = 10;
 
-export function Ticketing({ refresh, toggleRefresh }) {
+export function Ticketing({ refresh }) {
+   const toggleRefresh = useContext(RefreshContext);
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
    const [tickets, setTickets] = useState([]);
@@ -42,7 +43,7 @@ export function Ticketing({ refresh, toggleRefresh }) {
          <Tab value={false} label='View All Cases' />
          <Tab value={authenticated.username} label='View My Cases' />
          <Tab value={'Closed'} label='View Closed Cases' />
-         <Tab onClick={() => {toggleRefresh(!refresh); setView(view)}} label={<SyncIcon />} />
+         <Tab onClick={() => {setView(view); toggleRefresh()}} label={<SyncIcon />} />
       </Tabs>
       <Tickets tickets={tickets} openTicket={openTicket}/>
       <Pagination count={page.count} onChange={(_, pageNum) => {
@@ -50,7 +51,7 @@ export function Ticketing({ refresh, toggleRefresh }) {
          let end = (pageNum - 1) * pageSize + pageSize;
          setPage({...page, start, end})
       }} />
-      <ChatModal openedTicket={openedTicket} openTicket={openTicket} refresh={refresh} toggleRefresh={toggleRefresh} />
+      <ChatModal openedTicket={openedTicket} openTicket={openTicket} />
    </Stack>
    )
 }

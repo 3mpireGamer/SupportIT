@@ -1,13 +1,14 @@
 import React, { useCallback, useContext } from 'react';
 import { Button, IconButton, Grid, Typography } from '@mui/material';
 import { TicketingModal } from '../modals/ticketingmodal';
-import { AuthContext, FirestoreContext } from '../app';
+import { AuthContext, FirestoreContext, RefreshContext } from '../app';
 import { generateCaseNo, generateId } from "../utils";
 import { addTicket } from './firebase';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 
-export function Head({ authenticate, refresh, toggleRefresh }) {
+export function Head({ authenticate }) {
+   const toggleRefresh = useContext(RefreshContext);
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
 
@@ -23,8 +24,8 @@ export function Head({ authenticate, refresh, toggleRefresh }) {
          dateTime: new Date()
       }];
       addTicket(fs.collection, ticket);
-      toggleRefresh(!refresh);
-   }, [authenticated, fs.collection, refresh, toggleRefresh])
+      toggleRefresh();
+   }, [authenticated, fs.collection, toggleRefresh])
 
 return (
    <Grid container spacing={1} pt={1} pb={1} justifyContent='space-around'>

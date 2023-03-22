@@ -85,5 +85,7 @@ export function addTicket(ticketCollection, ticket) {
    addDoc(ticketCollection, ticket)
 }
 export function updateTicket(db, ticket) {
-   updateDoc(doc(db, 'tickets', ticket.id), ticket);
+   let docRef = doc(db, 'tickets', ticket.id);
+   delete ticket.id; 
+   updateDoc(docRef, ticket);
 }
