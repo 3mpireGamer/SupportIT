@@ -1,5 +1,7 @@
 import { initializeApp } from 'firebase/app';
 import { addDoc, collection, doc, getDocs, getFirestore, orderBy, query, updateDoc, where } from 'firebase/firestore';
+import { initializeAppCheck, ReCaptchaV3Provider } from 'firebase/app-check';
+
 
 export function firestoreInit() {
    const firebaseConfig = {
@@ -11,7 +13,11 @@ export function firestoreInit() {
       appId: "1:403186507043:web:da892e3c03554157438096"
    }
    
-   initializeApp(firebaseConfig);
+   const app = initializeApp(firebaseConfig);
+   initializeAppCheck(app, {
+      provider: new ReCaptchaV3Provider('6Ld6rh8lAAAAALnjM9RPT-bImyHlE9fp8-iNlY1V'),
+      isTokenAutoRefreshEnabled: true
+    });
    let db = getFirestore();
    let ticketCollection = collection(db, 'tickets');
    let userCollection = collection(db, 'users');
