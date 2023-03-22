@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState } from "react"
 import { Button, Stack, TextField, Typography } from '@mui/material';
 import { FirestoreContext } from "../app";
 import { onSnapshot } from "firebase/firestore";
+import ReCAPTCHA from "react-google-recaptcha";
 
 
 export function Auth({ authenticate }) {
@@ -18,6 +19,7 @@ export function Auth({ authenticate }) {
    }, [fs.users]);
    const [username, setUsername] = useState();
    const [password, setPassword] = useState();
+   const [captchaComplete, completeCaptcha] = useState(false);
    const [authError, throwError] = useState('');
 
    const enterPressed = (id) => {
@@ -61,7 +63,8 @@ export function Auth({ authenticate }) {
          onKeyDown={(e) => {if (e.key === 'Enter') {enterPressed(e.target.id)}}} />
       <TextField id='password' variant='outlined' label='Password' type='password' onChange={onChange}
          onKeyDown={(e) => {if (e.key === 'Enter') {enterPressed(e.target.id)}}} />
-      {username ? <Button onClick={checkAuth} variant='contained'>Login</Button>
+      <ReCAPTCHA sitekey='6LcXnR8lAAAAAAh5TM61BWhEoJmhW3uEy3xXRo4s' onChange={() => completeCaptcha(true)} />
+      {(username && captchaComplete) ? <Button onClick={checkAuth} variant='contained'>Login</Button>
       : <Button disabled variant='contained'>Login</Button>}
    </Stack></Stack>
    )
