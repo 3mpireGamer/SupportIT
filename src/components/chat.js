@@ -24,8 +24,8 @@ export function MessagingHead({ confirm, setConfirm, closeTicket, selectedTicket
 function TicketCloser({ confirm, setConfirm, closeTicket, selectedTicket }) {
    return confirm ? <>
       <IconButton variant='text' color='error' onClick={() => {setConfirm(false)}}><CancelPresentationTwoToneIcon /></IconButton>
-      <Button variant='text' size='large' onClick={() => {closeTicket(selectedTicket)}}>Close {selectedTicket.caseno}?</Button>
-   </> : <Button variant='text' size='large' onClick={() => {setConfirm(true)}}>Case {selectedTicket.caseno}</Button>
+      <Button variant='text' size='large' color='black' onClick={() => {closeTicket(selectedTicket)}}>Close {selectedTicket.caseno}?</Button>
+   </> : <Button variant='text' size='large' color='black' onClick={() => {setConfirm(true)}}>Case {selectedTicket.caseno}</Button>
 }
 export function Messages({ ticket }) {
    const authenticated = useContext(AuthContext);

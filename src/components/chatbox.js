@@ -51,7 +51,7 @@ export function ChatBox({ openedTicket, openTicket }) {
    if (error) return <Typography color='error' textAlign='center' variant='h5'>Ticket Not Found<br />Refresh to Update Tickets</Typography>
    if (!selectedTicket.messages) return <Typography textAlign='center' variant='h5'>Loading Ticket...</Typography>
    return (
-   <Stack direction="column" justifyContent="flex-end" alignItems="center" width='380px' backgroundColor='common.white'>
+   <Stack direction="column" justifyContent="flex-end" alignItems="center" width='380px' backgroundColor='secondary.light'>
       <MessagingHead confirm={confirm} setConfirm={setConfirm} closeTicket={closeTicket} selectedTicket={selectedTicket} />
       <Messages ticket={selectedTicket} />
       <MessageBox handleNewMessage={handleNewMessage} selectedTicket={selectedTicket} />

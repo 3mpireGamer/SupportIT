@@ -1,5 +1,5 @@
 import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import { blue, blueGrey, deepOrange } from '@mui/material/colors';
+import { blue, blueGrey, deepOrange, grey, indigo } from '@mui/material/colors';
 
 export function generateCaseNo(author) {
    return ('C-' + author[0] + Math.floor(Math.random() * 10000)
@@ -67,51 +67,75 @@ export function parseMonth(month) {
       default: return ''
    }
 }
-export function getTheme() {
-   let base = responsiveFontSizes(createTheme({
-      palette: {
-        primary: {
-          light: blue['50'], 
-          main: blue['600'], 
-          dark: blue['800'], 
-        },
-        secondary: {
-          light: blueGrey['A100'], 
-          main: blueGrey['100'], 
-          dark: blueGrey['200'], 
-        }, 
-        error: {
-          light: deepOrange['500'], 
-          main: deepOrange['800'], 
-          dark: deepOrange['A700'], 
-        },
-        black: {
-          main: '#000000', 
-        },
-        white: {
-          main: '#ffffff',
-        },
+
+const light = responsiveFontSizes(createTheme({
+   palette: {
+     primary: {
+         light: blue['50'], 
+         main: blue['600'], 
+         dark: blue['800'], 
+     },
+     secondary: {
+         light: blueGrey['100'], 
+         main: blueGrey['200'], 
+         dark: blueGrey['300'], 
       }, 
-      typography: {
-        h1: {color: 'black'}, 
-        h2: {color: 'black'}, 
-        h3: {color: 'black'}, 
-        h4: {color: 'black'}, 
-        h5: {color: 'black'}, 
-        h6: {color: 'black'}, 
+      black: {
+         main: '#000', 
+      },
+      white: {
+         main: '#fff',
+      },
+   }, 
+   typography: {
+     h1: {color: 'black'}, 
+     h2: {color: 'black'}, 
+     h3: {color: 'black'}, 
+     h4: {color: 'black'}, 
+     h5: {color: 'black'}, 
+     h6: {color: 'black'}, 
+   }, 
+}));
+const dark = responsiveFontSizes(createTheme({
+   palette: {
+      mode: 'dark', 
+      primary: {
+         light: indigo['300'], 
+         main: indigo['500'], 
+         dark: indigo['900'], 
       }, 
-   }));
-   base = createTheme(base, {
+      secondary: {
+         light: grey['700'], 
+         main: grey['800'], 
+         dark: grey['900'], 
+      },
+      black: {
+         main: '#fff', 
+      },
+      white: {
+         main: '#000',
+      },
+   }
+}));
+export function getTheme(mode) {
+   let selectedTheme = mode === 'dark' ? dark : light;
+   return createTheme(selectedTheme, {
       palette: {
         background: {
-          default: base.palette.primary.light
-      }},
+            default: selectedTheme.palette.primary.light
+         }, 
+         error: {
+            light: deepOrange['500'], 
+            main: deepOrange['800'], 
+            dark: deepOrange['A700'], 
+          },
+      },
       components: {
-        MuiAppBar: {
-          styleOverrides: {
-            colorPrimary: {
-              backgroundColor: base.palette.secondary.dark
-      }}}}
-   });
-   return base
-}
+         MuiAppBar: {
+            styleOverrides: {
+               colorPrimary: {
+                  backgroundColor: selectedTheme.palette.secondary.dark
+         }}},
+      }
+   }
+)}

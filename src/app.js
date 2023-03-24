@@ -18,20 +18,21 @@ export const RefreshContext = React.createContext();
 export function App () {
    const [authenticated, authenticate] = useState('');
    const [refresh, toggleRefresh] = useState(false);
-   const [theme, setTheme] = useState(getTheme());
+   const [theme, setTheme] = useState(getTheme('light'));
    // eslint-disable-next-line
    const setMode = useCallback((mode) => {
-      //Set dark mode
-      // eslint-disable-next-line
+      setTheme(getTheme(mode));
    }, [setTheme])
 
    return (
    <ThemeProvider theme={theme}>
       <CssBaseline />
-      <AuthContext.Provider value={authenticated}><FirestoreContext.Provider value={fs}><RefreshContext.Provider value={() => {toggleRefresh(!refresh)}}>
-         <AppBar id='head' position='static'><Head authenticate={authenticate} /></AppBar>
-         {authenticated ? <Ticketing refresh={refresh}/> : <Auth authenticate={authenticate} />}
-         <ScrollModal />
-      </RefreshContext.Provider></FirestoreContext.Provider></AuthContext.Provider>
+      <AuthContext.Provider value={authenticated}><FirestoreContext.Provider value={fs}>
+         <RefreshContext.Provider value={() => {toggleRefresh(!refresh)}}>
+            <AppBar id='head' position='static'><Head authenticate={authenticate} mode={theme.palette.mode} setMode={setMode} /></AppBar>
+            {authenticated ? <Ticketing refresh={refresh}/> : <Auth authenticate={authenticate} />}
+            <ScrollModal />
+         </RefreshContext.Provider>
+      </FirestoreContext.Provider></AuthContext.Provider>
    </ThemeProvider>
 )}
