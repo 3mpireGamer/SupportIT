@@ -56,9 +56,9 @@ export function ChatModal({ openedTicket, openTicket }) {
    }, []);
 
    return (
-   <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '4px'}}>
+   <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '4px', margin: '0px'}}>
       <ClickAwayListener onClickAway={() => {openTicket('')}}>
-      <Box m={2} p={1} sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px', backgroundColor: 'secondary.dark'}}>
+      <Box m={2} sx={{border: 4, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px'}}>
          <ChatBox openedTicket={openedTicket} openTicket={openTicket} />
       </Box></ClickAwayListener>
    </Popper>

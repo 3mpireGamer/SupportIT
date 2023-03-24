@@ -19,7 +19,6 @@ export function App () {
    const [authenticated, authenticate] = useState('');
    const [refresh, toggleRefresh] = useState(false);
    const [theme, setTheme] = useState(getTheme('light'));
-   // eslint-disable-next-line
    const setMode = useCallback((mode) => {
       setTheme(getTheme(mode));
    }, [setTheme])

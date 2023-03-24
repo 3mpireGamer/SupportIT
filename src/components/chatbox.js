@@ -13,7 +13,6 @@ export function ChatBox({ openedTicket, openTicket }) {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
 
-   const [confirm, setConfirm] = useState(false);
    const [selectedTicket, setTicket] = useState({});
    const [error, setError] = useState(false);
    const unsubscribe = useRef(() => {});
@@ -40,7 +39,6 @@ export function ChatBox({ openedTicket, openTicket }) {
    }, [fs.db, authenticated])
 
    const closeTicket = useCallback((ticket) => {
-      setConfirm(false); 
       openTicket('');
       setTicket({});
       toggleRefresh();
@@ -51,8 +49,8 @@ export function ChatBox({ openedTicket, openTicket }) {
    if (error) return <Typography color='error' textAlign='center' variant='h5'>Ticket Not Found<br />Refresh to Update Tickets</Typography>
    if (!selectedTicket.messages) return <Typography textAlign='center' variant='h5'>Loading Ticket...</Typography>
    return (
-   <Stack direction="column" justifyContent="flex-end" alignItems="center" width='380px' backgroundColor='secondary.light'>
-      <MessagingHead confirm={confirm} setConfirm={setConfirm} closeTicket={closeTicket} selectedTicket={selectedTicket} />
+   <Stack direction="column" justifyContent="flex-end" alignItems="center" width='380px' backgroundColor='primary.light'>
+      <MessagingHead closeTicket={closeTicket} selectedTicket={selectedTicket} />
       <Messages ticket={selectedTicket} />
       <MessageBox handleNewMessage={handleNewMessage} selectedTicket={selectedTicket} />
    </Stack> 

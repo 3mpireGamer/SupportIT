@@ -40,9 +40,9 @@ export function Ticketing({ refresh }) {
    return ( 
    <Stack alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
       <Tabs value={view} onChange={(_, view) => {setView(view)}}>
-         <Tab value={false} label='View All Cases' />
-         <Tab value={authenticated.username} label='View My Cases' />
-         <Tab value={'Closed'} label='View Closed Cases' />
+         <Tab value={false} label='All Cases' />
+         <Tab value={authenticated.username} label='My Cases' />
+         <Tab value={'Closed'} label='Closed Cases' />
          <Tab onClick={() => {setView(view); toggleRefresh()}} label={<SyncIcon />} />
       </Tabs>
       <Tickets tickets={tickets} openTicket={openTicket}/>

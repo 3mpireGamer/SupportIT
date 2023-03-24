@@ -14,7 +14,7 @@ function Ticket({ ticket, openTicket }) {
    return (<Card elevation={5} sx={{width: '380px'}}>
       <CardActionArea onClick={() => {openTicket(ticket.id)}}>
          <CardHeader 
-            avatar={<Avatar>{ticket.author.charAt(0)}</Avatar>}
+            avatar={<Avatar sx={{color: '#000', backgroundColor: '#bdbdbd'}}>{ticket.author.charAt(0)}</Avatar>}
             title={ticket.title} 
             subheader={
                ticket.caseno + ' last updated ' + formatDate(ticket.updated)

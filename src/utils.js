@@ -1,5 +1,6 @@
-import { createTheme, responsiveFontSizes } from '@mui/material/styles';
-import { blue, blueGrey, deepOrange, grey, indigo } from '@mui/material/colors';
+import { createTheme } from '@mui/material/styles';
+import { deepOrange } from '@mui/material/colors';
+import { dark, light } from './theme';
 
 export function generateCaseNo(author) {
    return ('C-' + author[0] + Math.floor(Math.random() * 10000)
@@ -40,9 +41,9 @@ export function canModTicket(authenticated, ticket) {
 export function canDeleteMessage(authenticated, ticket, message) {
    return isRecentMessage(message) && isAdminOrAuthor(authenticated, message.author) && !isClosed(ticket)
 }
-const day = 86400000;
+const hour = 3600000;
 function isRecentMessage(message) {
-   return Date.now() - message.dateTime.getTime() < day
+   return Date.now() - message.dateTime.getTime() < hour
 }
 function isAdminOrAuthor(authenticated, author) {
    return authenticated.isAdmin || authenticated.username === author
@@ -68,61 +69,15 @@ export function parseMonth(month) {
    }
 }
 
-const light = responsiveFontSizes(createTheme({
-   palette: {
-     primary: {
-         light: blue['50'], 
-         main: blue['600'], 
-         dark: blue['800'], 
-     },
-     secondary: {
-         light: blueGrey['100'], 
-         main: blueGrey['200'], 
-         dark: blueGrey['300'], 
-      }, 
-      black: {
-         main: '#000', 
-      },
-      white: {
-         main: '#fff',
-      },
-   }, 
-   typography: {
-     h1: {color: 'black'}, 
-     h2: {color: 'black'}, 
-     h3: {color: 'black'}, 
-     h4: {color: 'black'}, 
-     h5: {color: 'black'}, 
-     h6: {color: 'black'}, 
-   }, 
-}));
-const dark = responsiveFontSizes(createTheme({
-   palette: {
-      mode: 'dark', 
-      primary: {
-         light: indigo['300'], 
-         main: indigo['500'], 
-         dark: indigo['900'], 
-      }, 
-      secondary: {
-         light: grey['700'], 
-         main: grey['800'], 
-         dark: grey['900'], 
-      },
-      black: {
-         main: '#fff', 
-      },
-      white: {
-         main: '#000',
-      },
-   }
-}));
+
 export function getTheme(mode) {
-   let selectedTheme = mode === 'dark' ? dark : light;
+   const isDarkMode = mode === 'dark';
+   let selectedTheme = isDarkMode ? dark : light;
    return createTheme(selectedTheme, {
       palette: {
         background: {
-            default: selectedTheme.palette.primary.light
+            default: selectedTheme.palette.primary.light,
+            paper: isDarkMode ? selectedTheme.palette.secondary.main : selectedTheme.palette.background.paper,
          }, 
          error: {
             light: deepOrange['500'], 
