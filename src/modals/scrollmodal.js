@@ -31,7 +31,7 @@ export function ScrollModal() {
    }, []);
    return (
       <Popper open={true} anchorEl={virtualEl} placement='bottom-end'>  
-         <Box m={2} sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px', backgroundColor: 'secondary.dark'}}>
+         <Box m={2} sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: 1, backgroundColor: 'secondary.dark'}}>
             <IconButton color='black' onClick={() => {
                document.getElementById('head').scrollIntoView({behavior: 'smooth'});
             }}><KeyboardArrowUpIcon /></IconButton>

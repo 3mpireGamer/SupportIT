@@ -54,9 +54,9 @@ export function TicketingModal({ newTicket }) {
    return (<>
       <Button variant='contained' color='primary' onClick={() => {showModal()}}>Create Ticket</Button>
       <Box id='modalAnchor' pt={1} />
-      <Popper open={show} anchorEl={anchorEl} sx={{backgroundColor: 'secondary.dark', borderRadius: '4px'}}>
+      <Popper open={show} anchorEl={anchorEl} sx={{backgroundColor: 'secondary.dark', borderRadius: 1}}>
       <ClickAwayListener onClickAway={hideModal}>
-         <Stack p={1} spacing={1} alignItems='center' justifyContent='space-around' sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '8px', padding: '8px'}} >
+         <Stack p={1} spacing={1} alignItems='center' justifyContent='space-around' sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: 2, padding: 2}} >
             <TicketForm onChange={onChange} charsLeft={charsLeft} />
             <FormButtons hideModal={hideModal} createTicket={createTicket} isFilled={isFilled}/>
          </Stack>
@@ -67,10 +67,10 @@ const TicketForm = ({ onChange, charsLeft }) => {
    return (
    <Stack spacing={1.5} width='400px'>
       <TextField fullWidth id='title' variant='outlined' label='Case Title'
-         onChange={onChange} sx={{backgroundColor: 'secondary.light', borderRadius: '4px'}} 
-         InputProps={{endAdornment: <InputAdornment position='right'>{charsLeft + '/' + maxTitleLength}</InputAdornment>}}
+         onChange={onChange} sx={{backgroundColor: 'secondary.light', borderRadius: 1}} 
+         InputProps={{endAdornment: <InputAdornment position='end'>{charsLeft + '/' + maxTitleLength}</InputAdornment>}}
       />
-      <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px', boxSizing: 'border-box', backgroundColor: 'secondary.light'}}>
+      <Box sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: 1, boxSizing: 'border-box', backgroundColor: 'secondary.light'}}>
          <InputLabel sx={{padding: '8px 8px 0 8px'}} variant='standard' htmlFor='category'>Category</InputLabel>
          <NativeSelect sx={{padding: '0 8px 8px 8px'}} fullWidth id='category' defaultValue={'Select Category'} onChange={onChange}> 
             <option hidden>Select Category</option>

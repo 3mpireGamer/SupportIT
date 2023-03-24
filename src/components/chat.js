@@ -10,28 +10,29 @@ import { getChatHeight } from '../modals/chatmodal';
 import { AuthContext, FirestoreContext } from '../app';
 import { updateTicket } from './firebase';
 
-export function MessagingHead({ closeTicket, selectedTicket }) {
+export function MessagingHead({ closeModal, ticketCloser, selectedTicket }) {
    const authenticated = useContext(AuthContext);
    return <CardHeader id='confirmAnchor'
       avatar={<ChatBubbleOutlineIcon fontSize='large' />}
       title={selectedTicket.title} 
       subheader={'Case ' + selectedTicket.caseno}
-      action={canModTicket(authenticated, selectedTicket) ? <TicketCloser closeTicket={closeTicket} ticket={selectedTicket} /> : <></>}
+      action={<Stack><IconButton onClick={closeModal} size='small'><ClearIcon fontSize='small' /></IconButton>
+      {canModTicket(authenticated, selectedTicket) ? <TicketCloser ticketCloser={ticketCloser} ticket={selectedTicket} /> : <></>}</Stack>}
       titleTypographyProps={{align: 'right', sx: {fontWeight: 'bold'}}}
-      subheaderTypographyProps={{align: 'right'}}
+      subheaderTypographyProps={{align: 'right', sx:{paddingTop: 1.25}}}
       sx={{backgroundColor: 'secondary.main', width: '100%'}}
    />
 }
-function TicketCloser({ closeTicket, ticket }) {
+function TicketCloser({ ticketCloser, ticket }) {
    const [confirmClose, setConfirmClose] = useState(false);
    return (<>
-   <IconButton onClick={() => setConfirmClose(true)}>
-      <MoreVertIcon  />
+   <IconButton onClick={() => setConfirmClose(true)} size='small'>
+      <MoreVertIcon fontSize='small' />
    </IconButton>
    <Popper open={confirmClose} anchorEl={document.getElementById('confirmAnchor')} placement='bottom-end'>
    <ClickAwayListener onClickAway={() => setConfirmClose(false)}>
-      <Stack direction='row' sx={{padding: '8px', backgroundColor: 'secondary.light'}}>
-         <Button variant='contained' disableElevation color='error' onClick={() => {closeTicket(ticket); setConfirmClose(false)}}>Close {ticket.caseno}?</Button>
+      <Stack direction='row' sx={{padding: 2, backgroundColor: 'secondary.light'}}>
+         <Button variant='contained' disableElevation color='error' onClick={() => {ticketCloser(ticket); setConfirmClose(false)}}>Close {ticket.caseno}?</Button>
          <IconButton size='small' onClick={() => setConfirmClose(false)}><ClearIcon /></IconButton>
       </Stack>
    </ClickAwayListener></Popper>
@@ -101,7 +102,7 @@ export function MessageBox({ handleNewMessage, selectedTicket }) {
       selectedTicket.status !== 'Closed' ? (
       <TextField id='content' variant='outlined' label={label}
          fullWidth multiline maxRows={3} minRows={3}
-         sx={{backgroundColor: 'secondary.light', borderRadius: '4px'}} 
+         sx={{backgroundColor: 'secondary.light', borderRadius: 1}} 
          onKeyDown={(e) => {if (e.key === 'Enter') {handleNewMessage(selectedTicket, e)}}}
          onFocus={() => {setLabel('Press Enter to Send Message')}} onBlur={() => {setLabel('Send Message')}}
       /> ) : <Typography textAlign='center' variant='h6'>This Ticket is Closed</Typography>

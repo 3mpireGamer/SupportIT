@@ -14,7 +14,7 @@ export function Ticketing({ refresh }) {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
    const [tickets, setTickets] = useState([]);
-   const [openedTicket, openTicket] = useState('');
+   const [openedTicket, openTicket] = useState(''); // state double changes when clicking away onto another ticket
    const [view, setView] = useState(authenticated.username);
    const [page, setPage] = useState({
       start: 0, 
@@ -36,6 +36,7 @@ export function Ticketing({ refresh }) {
       });
    }, [fs.query, view, authenticated, refresh, page.start, page.end, page.count]);
 
+   const closeModal = () => openTicket('')
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return ( 
    <Stack alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
@@ -51,7 +52,7 @@ export function Ticketing({ refresh }) {
          let end = (pageNum - 1) * pageSize + pageSize;
          setPage({...page, start, end})
       }} />
-      <ChatModal openedTicket={openedTicket} openTicket={openTicket} />
+      <ChatModal openedTicket={openedTicket} closeModal={closeModal} />
    </Stack>
    )
 }

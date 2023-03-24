@@ -3,6 +3,8 @@ import { Box, ClickAwayListener, Popper } from '@mui/material';
 import { ChatBox } from '../components/chatbox'
 import { getDocValues } from '../utils';
 
+// To-Do: Improve conditional placement logic. Find a way to do CSS Sticky? Use Refs for height and chatFits?
+
 const modalHeight = 124;
 const chatHeight = 400;
 export function getChatHeight() {return chatHeight};
@@ -27,7 +29,7 @@ function generateBoundingRect() {
    return ({boundingClientRect, placementBool})
 }
 
-export function ChatModal({ openedTicket, openTicket }) {
+export function ChatModal({ openedTicket, closeModal }) {
    const [virtualEl, setVirtualEl] = useState();
    const [placement, setPlacement] = useState();
    
@@ -56,10 +58,10 @@ export function ChatModal({ openedTicket, openTicket }) {
    }, []);
 
    return (
-   <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: '4px', margin: '0px'}}>
-      <ClickAwayListener onClickAway={() => {openTicket('')}}>
-      <Box m={2} sx={{border: 4, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: '4px'}}>
-         <ChatBox openedTicket={openedTicket} openTicket={openTicket} />
+   <Popper open={Boolean(openedTicket)} placement={placement} anchorEl={virtualEl} sx={{borderRadius: 1, margin: '0px'}}>
+      <ClickAwayListener onClickAway={closeModal} mouseEvent='onMouseDown'>
+      <Box m={2} sx={{border: 4, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: 1}}>
+         <ChatBox openedTicket={openedTicket} closeModal={closeModal} />
       </Box></ClickAwayListener>
    </Popper>
 )}
