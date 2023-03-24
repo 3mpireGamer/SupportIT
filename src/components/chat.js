@@ -1,11 +1,10 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
 import { canDeleteMessage, canModTicket, parseMonth } from '../utils';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
-import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
-import { Avatar, Box, Button, ButtonGroup, Card, CardActionArea, CardContent, CardHeader, ClickAwayListener, Collapse, Grid, IconButton, Popper, TextField, Typography } from '@mui/material';
+import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, ClickAwayListener, Grid, IconButton, Popper, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
 import { getChatHeight } from '../modals/chatmodal';
 import { AuthContext, FirestoreContext } from '../app';
@@ -43,7 +42,7 @@ export function Messages({ ticket }) {
    const fs = useContext(FirestoreContext);
    const latestMessage = useRef();
    useEffect(() => {
-      if(latestMessage.current) latestMessage.current.scrollIntoView({block: 'nearest'});
+      if(latestMessage.current) latestMessage.current.scrollIntoView({block: 'end'});
    }, [ticket])
    
    const deleteMessage = useCallback((id) => {
@@ -102,7 +101,7 @@ export function MessageBox({ handleNewMessage, selectedTicket }) {
       selectedTicket.status !== 'Closed' ? (
       <TextField id='content' variant='outlined' label={label}
          fullWidth multiline maxRows={3} minRows={3}
-         sx={{backgroundColor: 'white', borderRadius: '4px'}} 
+         sx={{backgroundColor: 'secondary.light', borderRadius: '4px'}} 
          onKeyDown={(e) => {if (e.key === 'Enter') {handleNewMessage(selectedTicket, e)}}}
          onFocus={() => {setLabel('Press Enter to Send Message')}} onBlur={() => {setLabel('Send Message')}}
       /> ) : <Typography textAlign='center' variant='h6'>This Ticket is Closed</Typography>

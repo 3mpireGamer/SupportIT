@@ -8,9 +8,11 @@ export function Tickets ({ tickets, openTicket }) {
    });
 }
 
+const maxDescLength = 150;
 function Ticket({ ticket, openTicket }) {
    const [expand, toggleExpand] = useState(false);
 
+   let desc = ticket.desc.slice(0, maxDescLength)
    return (<Card elevation={5} sx={{width: '380px'}}>
       <CardActionArea onClick={() => {openTicket(ticket.id)}}>
          <CardHeader 
@@ -22,8 +24,9 @@ function Ticket({ ticket, openTicket }) {
          />
       </CardActionArea>
       <Collapse in={expand} timeout='auto' unmountOnExit><CardContent>
-         <Typography variant='body1'>{ticket.author} created this ticket on {formatDate(ticket.created, true)}.</Typography>
-         <Typography variant='body2'>{ticket.desc}</Typography>
+         <Typography variant='h6'>Category: {ticket.category}</Typography>
+         <Typography variant='body1' paragraph>{desc} {desc.length < ticket.desc.length ? '...' : ''}</Typography>
+         <Typography variant='caption'>{ticket.author} created on {formatDate(ticket.created, true)}.</Typography>
       </CardContent></Collapse>
       <CardActions>
          <Stack direction='row' pl={7} pr={2} justifyContent='space-between' width='100%'>

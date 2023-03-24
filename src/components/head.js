@@ -14,15 +14,16 @@ export function Head({ authenticate, mode, setMode }) {
    const isDarkMode = mode === 'dark'
 
    const newTicket = useCallback((ticket) => {
+      let date = new Date();
       ticket.author = authenticated.username;
       ticket.caseno = generateCaseNo(authenticated.username);
-      ticket.created = new Date();
-      ticket.updated = new Date();
+      ticket.created = date;
+      ticket.updated = date;
       ticket.messages = [{
          id: generateId(),
          author: ticket.author, 
-         content: 'Hello, I need help with ' + ticket.category + '. ' + ticket.desc,
-         dateTime: new Date()
+         content: 'Hello, I need help with ' + ticket.category + '. \n' + ticket.desc,
+         dateTime: date,
       }];
       addTicket(fs.collection, ticket);
       toggleRefresh();
