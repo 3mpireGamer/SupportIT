@@ -1,40 +1,34 @@
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect, useRef, useState } from "react";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import { IconButton, Popper } from "@mui/material";
+import { IconButton } from "@mui/material";
 import { Box } from "@mui/system";
+import { elementWidth } from "../utils";
 
+const sx = {
+   position: 'fixed', bottom: '0px', left: '0px', width: 'fit-content'
+}
 
-function anchor() {
-   return ({
-      getBoundingClientRect: () => ({
-         width: '0', height: '0', left: '0', 
-         top: document.getElementById('root').offsetHeight
-   })})};
+export function ScrollModal({ openedTicket }) {
+   const [show, setShow] = useState(!openedTicket || window.innerWidth > elementWidth)
+   const modalWidth = useRef();
+   const scrollModal = useRef();
 
-export function ScrollModal() {
-   const [virtualEl, setVirtualEl] = useState(anchor());
-   
+   const handleResize = useCallback(() => {
+      if (scrollModal.current) modalWidth.current = scrollModal.current.clientWidth
+      console.log(scrollModal.current)
+      setShow(!openedTicket || window.innerWidth > elementWidth + modalWidth.current)
+   }, [openedTicket])
+
    useEffect(() => {
-      setVirtualEl(anchor());
-      window.addEventListener('scroll', () => {
-         setVirtualEl(anchor());
-      });
-      let eventTimer = null;
-      window.addEventListener('resize', () => {
-         if (eventTimer !== null) {
-            clearTimeout(eventTimer);
-         }
-         eventTimer = setTimeout(() => {
-            setVirtualEl(anchor());
-         }, 150);
-      });
-   }, []);
-   return (
-      <Popper open={true} anchorEl={virtualEl} placement='bottom-end'>  
-         <Box m={2} sx={{ border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: 1, backgroundColor: 'secondary.dark'}}>
-            <IconButton color='black' onClick={() => {
-               document.getElementById('head').scrollIntoView({behavior: 'smooth'});
-            }}><KeyboardArrowUpIcon /></IconButton>
-         </Box>
-      </Popper>
+      window.addEventListener('resize', handleResize)
+      return () => window.removeEventListener('resize', handleResize)
+   }, [handleResize])
+
+   //console.log(show)
+   return (show ? 
+   <Box width='0px'><Box p={2} sx={sx} ref={scrollModal}>
+      <IconButton sx={{border: 1, borderColor: 'rgba(0, 0, 0, 0.27)', borderRadius: 1, backgroundColor: 'secondary.dark'}} onClick={() => {
+         document.getElementById('head').scrollIntoView({behavior: 'smooth'});
+      }}><KeyboardArrowUpIcon color='black' /></IconButton>
+   </Box></Box> : <></>
 )}

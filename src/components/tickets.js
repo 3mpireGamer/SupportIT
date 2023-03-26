@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Avatar, Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Stack, Typography } from '@mui/material';
-import { parseMonth } from '../utils';
+import { elementWidth, parseMonth } from '../utils';
 
 export function Tickets ({ tickets, openTicket }) {
    return tickets.map(ticket => {
@@ -13,7 +13,7 @@ function Ticket({ ticket, openTicket }) {
    const [expand, toggleExpand] = useState(false);
 
    let desc = ticket.desc.slice(0, maxDescLength)
-   return (<Card elevation={5} sx={{width: '380px'}}>
+   return (<Card elevation={5} sx={{width: elementWidth + 'px'}}>
       <CardActionArea onClick={() => {openTicket(ticket.id)}}>
          <CardHeader 
             avatar={<Avatar sx={{color: '#000', backgroundColor: '#bdbdbd'}}>{ticket.author.charAt(0)}</Avatar>}

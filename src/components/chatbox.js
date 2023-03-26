@@ -1,14 +1,14 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { modTicket } from '../utils';
+import { elementWidth, modTicket } from '../utils';
 import { AuthContext, FirestoreContext, RefreshContext } from '../app';
 import { updateTicket, getLiveUpdate, getOpenedTicket } from './firebase';
 import { onSnapshot } from 'firebase/firestore';
 import { Stack } from '@mui/system';
 import { MessagingHead, Messages, MessageBox } from './chat'
-import { Typography } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 
 
-export function ChatBox({ openedTicket, closeModal }) {
+export function ChatBox({ openedTicket, closeModal, completeRender }) {
    const toggleRefresh = useContext(RefreshContext);
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
@@ -46,8 +46,10 @@ export function ChatBox({ openedTicket, closeModal }) {
       updateTicket(fs.db, modTicket(ticket, authenticated.username, authenticated.username + ' closed this ticket. '));
    }, [closeModal, fs.db, authenticated, toggleRefresh])
    
-   if (error) return <Typography color='error' textAlign='center' variant='h5'>Ticket Not Found<br />Refresh to Update Tickets</Typography>
-   if (!selectedTicket.messages) return <Typography textAlign='center' variant='h5'>Loading Ticket...</Typography>
+   useEffect(() => {if(!error && selectedTicket.messages) completeRender()});
+
+   if (error) return <Box width='380px'><Typography color='error' textAlign='center' variant='h5'>Ticket Not Found<br />Refresh to Update Tickets</Typography></Box>
+   if (!selectedTicket.messages) return <Box width={elementWidth + 'px'}><Typography textAlign='center' variant='h5'>Loading Ticket...</Typography></Box>
    return (
    <Stack direction="column" justifyContent="flex-end" alignItems="center" width='380px' backgroundColor='primary.light'>
       <MessagingHead closeModal={closeModal} ticketCloser={ticketCloser} selectedTicket={selectedTicket} />

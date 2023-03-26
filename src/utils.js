@@ -2,6 +2,8 @@ import { createTheme } from '@mui/material/styles';
 import { deepOrange } from '@mui/material/colors';
 import { dark, light } from './theme';
 
+export const elementWidth = 380
+
 export function generateCaseNo(author) {
    return ('C-' + author[0] + Math.floor(Math.random() * 10000)
       + author[author.length - 1] + Math.floor(Math.random() * 10000)).toUpperCase()
@@ -15,14 +17,6 @@ export function generateId() {
      )
    }
    return id
-}
-export function getDocValues() {
-   return [
-      document.getElementById('head').offsetHeight, 
-      document.getElementById('root').offsetHeight, 
-      document.getElementById('root').offsetWidth, 
-      window.scrollY
-   ]
 }
 export function modTicket(ticket, username, messageContent) {
    let date = new Date();

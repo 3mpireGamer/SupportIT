@@ -6,12 +6,12 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, ClickAwayListener, Grid, IconButton, Popper, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { getChatHeight } from '../modals/chatmodal';
 import { AuthContext, FirestoreContext } from '../app';
 import { updateTicket } from './firebase';
 
 export function MessagingHead({ closeModal, ticketCloser, selectedTicket }) {
    const authenticated = useContext(AuthContext);
+
    return <CardHeader id='confirmAnchor'
       avatar={<ChatBubbleOutlineIcon fontSize='large' />}
       title={selectedTicket.title} 
@@ -38,12 +38,14 @@ function TicketCloser({ ticketCloser, ticket }) {
    </ClickAwayListener></Popper>
 </>)}
 
+
+const chatHeight = 400;
 export function Messages({ ticket }) {
    const authenticated = useContext(AuthContext);
    const fs = useContext(FirestoreContext);
    const latestMessage = useRef();
    useEffect(() => {
-      if(latestMessage.current) latestMessage.current.scrollIntoView({block: 'end'});
+      latestMessage.current?.scrollIntoView({block: 'end'});
    }, [ticket])
    
    const deleteMessage = useCallback((id) => {
@@ -55,7 +57,7 @@ export function Messages({ ticket }) {
    }, [fs.db, ticket]);
 
    return (
-   <Stack spacing={2} width='100%' height={getChatHeight() + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}} p={1}>
+   <Stack spacing={2} width='100%' height={chatHeight + 'px'} sx={{overflow: 'scroll', overflowX: 'hidden'}} p={1}>
       {ticket.messages.map(message => {
          return <Grid ref={latestMessage} key={message.id} container>
          {(authenticated.username === message.author) ? (<>

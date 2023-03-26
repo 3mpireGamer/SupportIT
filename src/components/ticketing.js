@@ -5,6 +5,7 @@ import { AuthContext, FirestoreContext, RefreshContext } from '../app';
 import { getTickets } from './firebase';
 import { ChatModal } from '../modals/chatmodal'
 import { Tickets } from './tickets';
+import { ScrollModal } from '../modals/scrollmodal';
 
 
 const pageSize = 10;
@@ -38,8 +39,9 @@ export function Ticketing({ refresh }) {
 
    const closeModal = () => openTicket('')
    //Need Grid with Mutiple breakpoints for window resizing and small displays
-   return ( 
-   <Stack alignItems='center' spacing={2} width='100%' minHeight='600px' mt={1}>
+   return (<Stack direction='row' justifyContent='space-evenly'>
+   <ScrollModal openedTicket={openedTicket} />
+   <Stack alignItems='center' spacing={2} width='100%' minHeight='100vh' mt={1}>
       <Tabs value={view} onChange={(_, view) => {setView(view)}}>
          <Tab value={false} label='All Cases' />
          <Tab value={authenticated.username} label='My Cases' />
@@ -52,7 +54,7 @@ export function Ticketing({ refresh }) {
          let end = (pageNum - 1) * pageSize + pageSize;
          setPage({...page, start, end})
       }} />
-      <ChatModal openedTicket={openedTicket} closeModal={closeModal} />
    </Stack>
-   )
+   <ChatModal openedTicket={openedTicket} closeModal={closeModal} />
+   </Stack>)
 }

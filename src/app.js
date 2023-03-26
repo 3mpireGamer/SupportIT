@@ -7,7 +7,6 @@ import { firestoreInit } from "./components/firebase";
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
 import { getTheme } from "./utils";
-import { ScrollModal } from "./modals/scrollmodal";
 
 
 const fs = firestoreInit();
@@ -27,10 +26,9 @@ export function App () {
    <ThemeProvider theme={theme}>
       <CssBaseline />
       <AuthContext.Provider value={authenticated}><FirestoreContext.Provider value={fs}>
-         <RefreshContext.Provider value={() => {toggleRefresh(!refresh)}}>
+         <RefreshContext.Provider value={() => toggleRefresh(!refresh)}>
             <AppBar id='head' position='static'><Head authenticate={authenticate} mode={theme.palette.mode} setMode={setMode} /></AppBar>
             {authenticated ? <Ticketing refresh={refresh}/> : <Auth authenticate={authenticate} />}
-            <ScrollModal />
          </RefreshContext.Provider>
       </FirestoreContext.Provider></AuthContext.Provider>
    </ThemeProvider>
