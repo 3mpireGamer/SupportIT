@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useRef, useState } from "react";
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { IconButton } from "@mui/material";
 import { Box } from "@mui/system";
-import { elementWidth } from "../utils";
+import { elementWidth } from "../utils/utils";
 
 const bottomSx = {
    position: 'fixed', bottom: '0px', left: '0px', width: 'fit-content'

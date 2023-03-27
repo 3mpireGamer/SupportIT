@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Avatar, Button, Card, CardActionArea, CardActions, CardContent, CardHeader, Collapse, Stack, Typography } from '@mui/material';
-import { elementWidth, parseMonth } from '../utils';
+import { elementWidth, parseMonth } from '../utils/utils';
 
 export function Tickets ({ tickets, openTicket }) {
    return tickets.map(ticket => {

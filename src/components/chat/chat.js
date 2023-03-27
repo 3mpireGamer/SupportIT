@@ -1,13 +1,13 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { canDeleteMessage, canModTicket, parseMonth } from '../utils';
+import { canDeleteMessage, canModTicket, parseMonth } from '../../utils/utils';
 import ChatBubbleOutlineIcon from '@mui/icons-material/ChatBubbleOutline';
 import MoreVertIcon from '@mui/icons-material/MoreVert';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import { Box, Button, ButtonGroup, Card, CardContent, CardHeader, ClickAwayListener, Grid, IconButton, Popper, TextField, Typography } from '@mui/material';
 import { Stack } from '@mui/system';
-import { AuthContext, FirestoreContext } from '../app';
-import { updateTicket } from './firebase';
+import { AuthContext, FirestoreContext } from '../../app';
+import { updateTicket } from '../../utils/firebase';
 
 export function MessagingHead({ closeModal, ticketCloser, selectedTicket }) {
    const authenticated = useContext(AuthContext);

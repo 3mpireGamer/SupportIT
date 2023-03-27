@@ -1,12 +1,12 @@
 import React, { useCallback, useState } from "react";
 import { AppBar } from "@mui/material";
-import { Ticketing } from "./components/ticketing";
+import { Ticketing } from "./pages/ticketing";
 import { Head } from "./components/head";
-import { Auth } from "./components/auth"
-import { firestoreInit } from "./components/firebase";
+import { Auth } from "./pages/auth"
+import { firestoreInit } from "./utils/firebase";
 import { ThemeProvider } from '@mui/material/styles';
 import { CssBaseline } from '@mui/material';
-import { getTheme } from "./utils";
+import { getTheme } from "./utils/utils";
 
 
 const fs = firestoreInit();

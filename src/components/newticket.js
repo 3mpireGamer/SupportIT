@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { Button, Box, ButtonGroup, InputLabel, NativeSelect, TextField, Popper, ClickAwayListener, Stack, InputAdornment } from '@mui/material';
 import CancelPresentationTwoToneIcon from '@mui/icons-material/CancelPresentationTwoTone';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
+import { elementWidth } from '../utils/utils';
 
 const ticketTemplate = {
    author: '', 
@@ -17,7 +18,7 @@ const ticketTemplate = {
 let ticket = {...ticketTemplate}
 
 const maxTitleLength = 30
-export function TicketingModal({ newTicket }) {
+export function NewTicket({ newTicket }) {
    const [isFilled, setFilled] = useState(false);
    const [charsLeft, setCharsLeft] = useState(maxTitleLength);
    const [show, setShow] = useState(false);
@@ -65,7 +66,7 @@ export function TicketingModal({ newTicket }) {
 
 const TicketForm = ({ onChange, charsLeft }) => {  
    return (
-   <Stack spacing={1.5} width='400px'>
+   <Stack spacing={1.5} width={elementWidth + 'px'}>
       <TextField fullWidth id='title' variant='outlined' label='Case Title'
          onChange={onChange} sx={{backgroundColor: 'secondary.light', borderRadius: 1}} 
          InputProps={{endAdornment: <InputAdornment position='end'>{charsLeft + '/' + maxTitleLength}</InputAdornment>}}

@@ -1,7 +1,7 @@
 import React, { useCallback, useContext, useEffect, useRef, useState } from 'react'
-import { elementWidth, modTicket } from '../utils';
-import { AuthContext, FirestoreContext, RefreshContext } from '../app';
-import { updateTicket, getLiveUpdate, getOpenedTicket } from './firebase';
+import { elementWidth, modTicket } from '../../utils/utils';
+import { AuthContext, FirestoreContext, RefreshContext } from '../../app';
+import { updateTicket, getLiveUpdate, getOpenedTicket } from '../../utils/firebase';
 import { onSnapshot } from 'firebase/firestore';
 import { Stack } from '@mui/system';
 import { MessagingHead, Messages, MessageBox } from './chat'

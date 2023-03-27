@@ -2,10 +2,10 @@ import React, { useContext, useEffect, useState } from 'react';
 import { Pagination, Stack, Tab, Tabs } from '@mui/material';
 import SyncIcon from '@mui/icons-material/Sync';
 import { AuthContext, FirestoreContext, RefreshContext } from '../app';
-import { getTickets } from './firebase';
-import { ChatModal } from '../modals/chatmodal'
-import { Tickets } from './tickets';
-import { ScrollModal } from '../modals/scrollmodal';
+import { getTickets } from '../utils/firebase';
+import { ChatModal } from '../components/chat/chatmodal'
+import { Tickets } from '../components/tickets';
+import { ScrollModal } from '../components/scrollmodal';
 
 
 const pageSize = 10;

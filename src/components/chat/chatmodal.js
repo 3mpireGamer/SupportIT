@@ -1,6 +1,6 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box } from '@mui/material';
-import { ChatBox } from '../components/chatbox'
+import { ChatBox } from './chatbox'
 
 const bottomSx = {
    position: 'fixed', bottom: '0px', right: '0px',

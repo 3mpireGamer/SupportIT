@@ -1,9 +1,9 @@
 import React, { useCallback, useContext } from 'react';
 import { Button, IconButton, Grid, Typography } from '@mui/material';
-import { TicketingModal } from '../modals/ticketingmodal';
+import { NewTicket } from './newticket';
 import { AuthContext, FirestoreContext, RefreshContext } from '../app';
-import { generateCaseNo, generateId } from "../utils";
-import { addTicket } from './firebase';
+import { generateCaseNo, generateId } from "../utils/utils";
+import { addTicket } from '../utils/firebase';
 import DarkModeIcon from '@mui/icons-material/DarkMode';
 import LightModeIcon from '@mui/icons-material/LightMode';
 
@@ -41,7 +41,7 @@ return (
       <Grid item xs={6} textAlign='center'><Typography variant='h3'>SupportIT - Help Desk</Typography></Grid>
       <Grid item xs={3} textAlign='left' mt={3}><Typography variant='h5'>{authenticated ? 'Hello, ' : ''}{authenticated.username}</Typography></Grid>
       <Grid item xs={3} />
-      <Grid item xs={6} textAlign='center'>{authenticated ? <TicketingModal newTicket={newTicket} /> : <></>}</Grid>
+      <Grid item xs={6} textAlign='center'>{authenticated ? <NewTicket newTicket={newTicket} /> : <></>}</Grid>
       <Grid item xs={3} textAlign='left'>{authenticated ? <Button variant='outlined' color='error' onClick={() => {authenticate('')}}>Logout</Button> : <></>}</Grid>
    </Grid>
 )}
