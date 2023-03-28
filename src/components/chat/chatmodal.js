@@ -2,29 +2,28 @@ import React, { useCallback, useEffect, useRef, useState } from 'react'
 import { Box } from '@mui/material';
 import { ChatBox } from './chatbox'
 
+const initialSx = {
+   position: 'relative', width: 'fit-content'
+}
+
 const bottomSx = {
-   position: 'fixed', bottom: '0px', right: '0px',
-   width: 'fit-content'
-} 
-const topSx = {
-   position: 'fixed', top: '0px', right: '0px',
-   width: 'fit-content'
+   position: 'fixed', bottom: '0px', right: '0px', width: 'fit-content'
 } 
 
 export function ChatModal({ openedTicket, closeModal }) {
    const chatModal = useRef();
    const [modalHeight, setModalHeight] = useState();
    const [modalWidth, setModalWidth] = useState();
-   const [sx, setSx] = useState(bottomSx);
-   const lastScroll = useRef({scrollY: 0, translateBottom: modalHeight - window.innerHeight, translateTop: 0});
+   const [sx, setSx] = useState(initialSx);
+   const lastScroll = useRef({scrollY: 0, translate: 0});
 
    const completeRender = useCallback(() => {
       setModalHeight(chatModal.current.clientHeight);
       setModalWidth(chatModal.current.clientWidth);
    }, []);
    
-   const scrolledToHead = useCallback((translateTop) => {
-      return document.getElementById('head').clientHeight + (modalHeight - window.innerHeight - translateTop) > window.scrollY
+   const scrolledToHead = useCallback((translate) => {
+      return document.getElementById('head').clientHeight + (modalHeight - window.innerHeight + translate) > window.scrollY
    }, [modalHeight]);
    const chatFits = useCallback(() => {
       if (window.innerHeight > modalHeight) return window.innerHeight - (document.getElementById('head').clientHeight - window.scrollY) > modalHeight
@@ -33,26 +32,12 @@ export function ChatModal({ openedTicket, closeModal }) {
 
    const handleResizeOrScroll = useCallback(() => {
       let last = lastScroll.current;
-      let userScrolledDown = last.scrollY < window.scrollY
-      last = {scrollY: window.scrollY,  
-         translateBottom: userScrolledDown ?
-         Math.min(last.translateBottom + Math.abs(last.scrollY - window.scrollY), modalHeight - window.innerHeight) 
-         : Math.abs(last.translateTop - (modalHeight - window.innerHeight)), 
-         translateTop: !userScrolledDown ? 
-         Math.min(last.translateTop + Math.abs(last.scrollY - window.scrollY), modalHeight - window.innerHeight) 
-         : Math.abs(last.translateBottom - (modalHeight - window.innerHeight)),
+      last = {scrollY: window.scrollY, 
+         translate: Math.min(Math.max(last.translate + window.scrollY - last.scrollY, -(modalHeight - window.innerHeight)), 0)
       } 
       if (chatFits()) setSx(bottomSx);
-      else if (userScrolledDown && !scrolledToHead(last.translateTop)) {
-         setSx({...bottomSx, bottom: -(modalHeight - window.innerHeight) + last.translateBottom + 'px'});
-      } else if (!userScrolledDown) {
-         scrolledToHead(last.translateTop) 
-         ? setSx({
-            position: 'relative', top: '0px', right: modalWidth,
-            width: 'fit-content'
-         })
-         : setSx({...topSx, top: -(modalHeight - window.innerHeight) + last.translateTop + 'px'});
-      } 
+      else if (!scrolledToHead(last.translate)) setSx({...bottomSx, bottom: last.translate + 'px'});
+      else setSx({...initialSx, right: modalWidth});
       lastScroll.current = last;
    }, [chatFits, scrolledToHead, modalHeight, modalWidth])
 
