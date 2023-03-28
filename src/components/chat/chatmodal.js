@@ -49,7 +49,7 @@ export function ChatModal({ openedTicket, closeModal }) {
          window.removeEventListener('resize', handleResizeOrScroll);
          document.removeEventListener('scroll', handleResizeOrScroll);
       }
-   }, [modalHeight, handleResizeOrScroll]);
+   }, [handleResizeOrScroll]);
 
    console.log(lastScroll.current)
    return (openedTicket ? <Box width='0px'>
