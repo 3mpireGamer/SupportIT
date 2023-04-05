@@ -25,19 +25,12 @@ export function Ticketing({ refresh }) {
    
    useEffect(() => {
       getTickets(fs.query, view).then(result => {
-         let newCount = Math.ceil(result.length/pageSize);
-         if (newCount !== page.count) {
-            setPage({
-               start: 0, 
-               end: pageSize, 
-               count: newCount
-            });
-         }
+         updatePagination(result.length, page.count, setPage)
          setTickets(result.slice(page.start, page.end));
       });
    }, [fs.query, view, authenticated, refresh, page.start, page.end, page.count]);
 
-   const closeModal = () => openTicket('')
+   const closeModal = () => openTicket('');
    //Need Grid with Mutiple breakpoints for window resizing and small displays
    return (<Stack direction='row' justifyContent='space-evenly'>
    <ScrollModal openedTicket={openedTicket} />
@@ -57,4 +50,15 @@ export function Ticketing({ refresh }) {
    </Stack>
    <ChatModal openedTicket={openedTicket} closeModal={closeModal} />
    </Stack>)
+}
+
+function updatePagination(length, count, setPage) {
+   const newCount = Math.ceil(length/pageSize);
+   if (newCount !== count) {
+      setPage({
+         start: 0, 
+         end: pageSize, 
+         count: newCount
+      });
+   }
 }
