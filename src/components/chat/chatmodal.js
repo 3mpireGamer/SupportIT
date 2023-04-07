@@ -31,7 +31,6 @@ export function ChatModal({ openedTicket, closeModal }) {
    }, [modalHeight]);
 
    const handleResizeOrScroll = useCallback(() => {
-      console.log('resize handled')
       let last = lastScroll.current;
       last = {scrollY: window.scrollY, 
          translate: Math.min(Math.max(last.translate + window.scrollY - last.scrollY, -(modalHeight - window.innerHeight)), 0)
@@ -51,7 +50,6 @@ export function ChatModal({ openedTicket, closeModal }) {
       }
    }, [handleResizeOrScroll]);
 
-   console.log(lastScroll.current)
    return (openedTicket ? <Box width='0px'>
    <Box ref={chatModal} p={2} sx={sx}><Box border={4} borderColor='rgba(0, 0, 0, 0.27)' borderRadius={1}>
       <ChatBox openedTicket={openedTicket} closeModal={closeModal} completeRender={completeRender}/>
