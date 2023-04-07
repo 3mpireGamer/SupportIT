@@ -4,7 +4,7 @@ import { AuthContext, FirestoreContext, RefreshContext } from '../../app';
 import { updateTicket } from '../../utils/firebase';
 import { Stack } from '@mui/system';
 import { MessagingHead, Messages, MessageBox } from './chat'
-import { Box, Typography } from '@mui/material';
+import { Box, ClickAwayListener, Typography } from '@mui/material';
 import { useLiveTicketUpdates } from '../../utils/hooks'
 
 
@@ -32,7 +32,11 @@ export function ChatBox({ openedTicket, closeModal, completeRender }) {
    
    useEffect(() => {if(!error && selectedTicket.messages) completeRender()});
 
-   if (error) return <Box width='380px'><Typography color='error' textAlign='center' variant='h5'>Ticket Not Found<br />Refresh to Update Tickets</Typography></Box>
+   if (error) return (
+   <ClickAwayListener onClickAway={closeModal} mouseEvent='onMouseDown'><Box width='380px'>
+      <Typography color='error' textAlign='center' variant='h5'>Ticket Not Found<br />Refresh to Update Tickets</Typography>
+   </Box></ClickAwayListener>
+   )
    if (!selectedTicket.messages) return <Box width={elementWidth + 'px'}><Typography textAlign='center' variant='h5'>Loading Ticket...</Typography></Box>
    return (
    <Stack direction="column" justifyContent="flex-end" alignItems="center" width='380px' backgroundColor='primary.light'>
